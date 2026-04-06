@@ -1,0 +1,18 @@
+node_modules/
+dist/
+.turbo/
+*.tsbuildinfo
+coverage/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Claude
+.claude/
+
+# OS
+.DS_Store
+Thumbs.db

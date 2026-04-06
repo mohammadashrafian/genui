@@ -1,0 +1,31 @@
+{
+  "name": "genui",
+  "private": true,
+  "description": "A type-safe bridge between LLM outputs and your React components",
+  "author": "Mohammad Ashrafian (https://github.com/mohammadashrafian)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mohammadashrafian/genui.git"
+  },
+  "homepage": "https://github.com/mohammadashrafian/genui#readme",
+  "bugs": {
+    "url": "https://github.com/mohammadashrafian/genui/issues"
+  },
+  "packageManager": "pnpm@9.15.4",
+  "scripts": {
+    "build": "turbo build",
+    "test": "turbo test",
+    "lint": "turbo lint",
+    "format": "prettier --write \"**/*.{ts,tsx,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,json,md}\"",
+    "clean": "turbo clean"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "eslint": "^9.0.0",
+    "prettier": "^3.2.0",
+    "turbo": "^2.0.0",
+    "typescript": "^5.5.0"
+  }
+}
