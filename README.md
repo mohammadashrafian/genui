@@ -11,6 +11,7 @@
   <strong>A type-safe bridge between LLM outputs and your React components.</strong>
 </p>
 
+
 <p align="center">
   Register your components with Zod schemas. Feed in raw LLM JSON.<br/>
   Get validated, rendered React components — or a correction prompt to fix the AI.
