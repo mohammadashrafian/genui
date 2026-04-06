@@ -62,6 +62,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build packages (required for cross-package types)
+        run: pnpm turbo build --filter='*'
+
       - name: Type check core
         run: pnpm --filter @genui/core lint
 
