@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/GenUI-v0.1.0-blue?style=for-the-badge" alt="GenUI Version" />
+  <img src="https://img.shields.io/badge/GenUI-v0.2.0-blue?style=for-the-badge" alt="GenUI Version" />
   <img src="https://img.shields.io/badge/TypeScript-Strict-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript Strict" />
   <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="MIT License" />
-  <img src="https://img.shields.io/badge/Tests-31%20Passing-brightgreen?style=for-the-badge" alt="Tests Passing" />
+  <img src="https://img.shields.io/badge/Tests-88%20Passing-brightgreen?style=for-the-badge" alt="Tests Passing" />
 </p>
 
 <h1 align="center">GenUI</h1>
@@ -48,10 +48,14 @@ LLM Output → GenUI Registry → Zod Validation → Typed React Component
 - **Type-Safe Registry** — Register components with Zod schemas. TypeScript infers prop types automatically.
 - **Runtime Validation** — Every LLM output is validated before it touches the DOM. No unsafe data gets through.
 - **Auto-Correction** — When validation fails, GenUI generates a structured prompt telling the LLM exactly what to fix.
+- **Streaming Rendering** — Progressive UI rendering as LLM tokens arrive. See components build up in real time.
+- **Partial JSON Parsing** — Heals incomplete JSON streams, extracting valid partial objects at each step.
+- **Wire Format** — Token-efficient compact encoding with abbreviation maps. Saves 20-40% on output tokens.
+- **Auto-Retry** — Exponential backoff retry logic with configurable hooks for resilient streaming.
 - **Tool Definitions** — Auto-generate JSON Schema descriptions of your components to send to the LLM.
-- **React Hooks** — `useGenerativeUI` hook and `<GenerativeUI />` component for seamless integration.
-- **Framework-Agnostic Core** — The validation engine is pure TypeScript. React hooks are a separate package.
-- **Lightweight** — ~7KB core + ~1KB React. Zero runtime dependencies beyond Zod.
+- **React Hooks** — `useGenerativeUI` and `useStreamingUI` hooks for instant and streaming rendering.
+- **Framework-Agnostic Core** — The validation and streaming engine is pure TypeScript. React hooks are a separate package.
+- **Lightweight** — ~20KB core + ~4KB React. Zero runtime dependencies beyond Zod.
 
 ---
 
@@ -375,6 +379,104 @@ import { GenerativeUI } from '@genui/react';
 
 ---
 
+## Streaming (Phase 2)
+
+GenUI renders components progressively as LLM tokens arrive — users see UI building up in real time instead of waiting for the full response.
+
+### StreamParser — Incremental JSON Parsing
+
+```ts
+import { StreamParser } from '@genui/core';
+
+const parser = new StreamParser();
+
+// Feed tokens as they arrive from the LLM
+parser.push('{"type":"Weather');      // → partial: { type: "Weather" }
+parser.push('Card","props":{"city"'); // → partial: { type: "WeatherCard", props: { city: ... } }
+parser.push(':"Tokyo"}}');           // → complete: full valid JSON
+
+console.log(parser.current);  // The last valid parsed object
+console.log(parser.complete);  // true when JSON is naturally complete
+```
+
+### useStreamingUI — Progressive React Rendering
+
+```tsx
+import { useStreamingUI } from '@genui/react';
+
+function StreamingChat() {
+  const { element, isStreaming, start, snapshot } = useStreamingUI(registry, {
+    skeleton: <Skeleton />,
+    fallback: <ErrorMessage />,
+    onComplete: (snap) => console.log('Done:', snap.props),
+    retry: { maxRetries: 3, baseDelay: 1000 },
+  });
+
+  const handleSend = async (message: string) => {
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      body: JSON.stringify({ message }),
+    });
+    // Pipe the response body directly into the streaming hook
+    await start(response.body!.pipeThrough(new TextDecoderStream()));
+  };
+
+  return (
+    <div>
+      {isStreaming && <ProgressBar value={snapshot.progress} />}
+      {element}
+    </div>
+  );
+}
+```
+
+The hook transitions through phases: `pending → skeleton → partial → complete`
+
+### Wire Format — Save 20-40% on Output Tokens
+
+```ts
+import { encode, decode, generateWireFormatPrompt } from '@genui/core';
+
+// Standard: {"type":"WeatherCard","props":{"city":"Tokyo","temperature":22}}  (74 chars)
+// Wire:     {"t":"c","n":"WeatherCard","p":{"c":"Tokyo","t":22}}              (52 chars → 30% savings)
+
+const abbreviations = { c: 'city', t: 'temperature' };
+const wire = encode({ type: 'WeatherCard', props: { city: 'Tokyo', temperature: 22 } }, abbreviations);
+const decoded = decode(wire, abbreviations);
+
+// Include in your system prompt so the LLM uses compact format
+const prompt = generateWireFormatPrompt(abbreviations);
+```
+
+### StreamResolver — Full Pipeline
+
+```ts
+import { StreamResolver } from '@genui/core';
+
+const resolver = new StreamResolver({
+  registry,
+  throttleMs: 50,        // Emit snapshots at 20fps
+  abbreviations,          // Wire format abbreviations
+  retry: {
+    maxRetries: 3,
+    baseDelay: 1000,
+    onRetry: (attempt) => console.log(`Retry ${attempt}`),
+  },
+});
+
+// Source can be a ReadableStream, AsyncIterable, or a factory function (for retries)
+await resolver.consume(
+  { source: () => fetchLLMStream(), signal: abortController.signal },
+  (event) => {
+    if (event.type === 'snapshot') updateUI(event.data);
+    if (event.type === 'complete') finalize(event.data.props);
+    if (event.type === 'error') handleError(event.data.message);
+  },
+);
+```
+
+---
+
 ## Full Example: AI Chat with Generative UI
 
 Here's a complete example showing how GenUI fits into an AI chat application:
@@ -531,20 +633,27 @@ if (!result.ok) {
 ```
 genui/
 ├── packages/
-│   ├── core/                  # @genui/core — Schema validation & registry
+│   ├── core/                  # @genui/core — Schema validation, streaming & registry
 │   │   └── src/
 │   │       ├── registry.ts    # ComponentRegistry class
 │   │       ├── correction.ts  # Auto-correction prompt generator
 │   │       ├── errors.ts      # Custom error classes
 │   │       ├── types.ts       # TypeScript types & interfaces
+│   │       ├── stream/
+│   │       │   ├── stream-parser.ts    # Incremental JSON parser
+│   │       │   ├── stream-resolver.ts  # Progressive validation pipeline
+│   │       │   ├── wire-format.ts      # Token-efficient encoding
+│   │       │   └── types.ts            # Stream types
 │   │       └── index.ts       # Public API exports
 │   └── react/                 # @genui/react — React hooks & components
 │       └── src/
-│           ├── use-generative-ui.ts  # useGenerativeUI hook
-│           ├── generative-ui.tsx     # <GenerativeUI /> component
-│           └── index.ts              # Public API exports
+│           ├── use-generative-ui.ts   # useGenerativeUI hook (instant)
+│           ├── use-streaming-ui.ts    # useStreamingUI hook (progressive)
+│           ├── generative-ui.tsx      # <GenerativeUI /> component
+│           └── index.ts               # Public API exports
 ├── examples/
-│   └── basic-registry/        # Minimal working example
+│   ├── basic-registry/        # Phase 1 — Minimal registry example
+│   └── streaming-demo/        # Phase 2 — Streaming + wire format demo
 ├── turbo.json                 # Turborepo config
 ├── pnpm-workspace.yaml        # Monorepo workspaces
 └── tsconfig.base.json         # Shared TypeScript strict config
@@ -581,7 +690,7 @@ GenUI is built in phases. Each phase is independently useful.
 | Phase | Status | Description |
 |---|---|---|
 | **Phase 1** — Foundation | ✅ Complete | Component Registry + Schema Validation |
-| **Phase 2** — Streaming | Planned | Progressive component rendering from LLM streams |
+| **Phase 2** — Streaming | ✅ Complete | Progressive component rendering from LLM streams |
 | **Phase 3** — Bidirectional Sync | Planned | User interactions flow back to the AI agent |
 | **Phase 4** — Adapters | Planned | Pre-built adapters for shadcn/ui, Tailwind, Material UI |
 | **Phase 5** — Docs & Launch | Planned | Documentation site, playground, and v1.0 release |
