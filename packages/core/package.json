@@ -1,7 +1,7 @@
 {
   "name": "@genui/core",
-  "version": "0.2.0",
-  "description": "Type-safe component registry and schema validation for LLM-driven UI",
+  "version": "0.3.0",
+  "description": "Type-safe component registry, streaming, and bidirectional sync for LLM-driven UI",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",

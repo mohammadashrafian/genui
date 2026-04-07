@@ -1,0 +1,18 @@
+{
+  "name": "@genui/example-bidirectional-demo",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/main.ts",
+    "build": "echo 'example — no build needed'"
+  },
+  "dependencies": {
+    "@genui/core": "workspace:*",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.0.0",
+    "typescript": "^5.5.0"
+  }
+}

@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/GenUI-v0.2.0-blue?style=for-the-badge" alt="GenUI Version" />
+  <img src="https://img.shields.io/badge/GenUI-v0.3.0-blue?style=for-the-badge" alt="GenUI Version" />
   <img src="https://img.shields.io/badge/TypeScript-Strict-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript Strict" />
   <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="MIT License" />
-  <img src="https://img.shields.io/badge/Tests-88%20Passing-brightgreen?style=for-the-badge" alt="Tests Passing" />
+  <img src="https://img.shields.io/badge/Tests-135%20Passing-brightgreen?style=for-the-badge" alt="Tests Passing" />
 </p>
 
 <h1 align="center">GenUI</h1>
@@ -52,10 +52,14 @@ LLM Output → GenUI Registry → Zod Validation → Typed React Component
 - **Partial JSON Parsing** — Heals incomplete JSON streams, extracting valid partial objects at each step.
 - **Wire Format** — Token-efficient compact encoding with abbreviation maps. Saves 20-40% on output tokens.
 - **Auto-Retry** — Exponential backoff retry logic with configurable hooks for resilient streaming.
+- **Bidirectional Sync** — User interactions flow back to the AI as structured, validated actions.
+- **Action Schemas** — Define what interactions each component can emit, validated with Zod.
+- **ActionQueue** — Debouncing, conflict resolution, and ordered dispatch for rapid user interactions.
+- **CoAgentProvider** — React context that bridges UI components and the AI agent bidirectionally.
 - **Tool Definitions** — Auto-generate JSON Schema descriptions of your components to send to the LLM.
-- **React Hooks** — `useGenerativeUI` and `useStreamingUI` hooks for instant and streaming rendering.
-- **Framework-Agnostic Core** — The validation and streaming engine is pure TypeScript. React hooks are a separate package.
-- **Lightweight** — ~20KB core + ~4KB React. Zero runtime dependencies beyond Zod.
+- **React Hooks** — `useGenerativeUI`, `useStreamingUI`, and `useCoAgent` hooks for the full AI-UI lifecycle.
+- **Framework-Agnostic Core** — The validation, streaming, and action engine is pure TypeScript. React hooks are a separate package.
+- **Lightweight** — ~29KB core + ~7KB React. Zero runtime dependencies beyond Zod.
 
 ---
 
@@ -377,6 +381,37 @@ import { GenerativeUI } from '@genui/react';
 | `fallback` | `ReactNode` | No | What to show on failure |
 | `onError` | `(prompt, errors) => void` | No | Called when validation fails |
 
+#### `<CoAgentProvider />`
+
+Wraps your app to enable bidirectional AI-UI communication:
+
+```tsx
+import { CoAgentProvider } from '@genui/react';
+```
+
+| Prop | Type | Required | Description |
+|---|---|---|---|
+| `registry` | `ActionRegistry` | Yes | Registry with action schemas |
+| `dispatchOptions` | `DispatchOptions` | No | Debounce, conflict strategy, queue size |
+| `onAction` | `(action) => void` | No | Called on each dispatched action |
+| `onToolCall` | `(result) => void` | No | Called with serialized tool call result |
+| `onValidationError` | `(component, action, errors) => void` | No | Called when validation fails |
+
+#### `useCoAgent`
+
+```tsx
+import { useCoAgent } from '@genui/react';
+
+const { dispatch, history, lastToolCall, context } = useCoAgent('ComponentName');
+```
+
+| Return | Type | Description |
+|---|---|---|
+| `dispatch` | `(action, payload) => Action \| null` | Dispatch a validated action |
+| `history` | `readonly Action[]` | All dispatched actions in this session |
+| `lastToolCall` | `ToolCallResult \| null` | Most recent tool call result |
+| `context` | `CoAgentContextValue` | Access to registry, queue, serializer |
+
 ---
 
 ## Streaming (Phase 2)
@@ -473,6 +508,146 @@ await resolver.consume(
     if (event.type === 'error') handleError(event.data.message);
   },
 );
+```
+
+---
+
+## Bidirectional Sync (Phase 3)
+
+GenUI doesn't just render AI output — it lets your UI talk back. When users interact with AI-rendered components, those actions are validated, queued, and serialized into structured tool call results that the AI can understand.
+
+```
+AI Agent → GenUI → Rendered Component
+                        ↓ (user interacts)
+AI Agent ← Tool Call ← ActionQueue ← Validated Action
+```
+
+### ActionRegistry — Components with Action Schemas
+
+```ts
+import { ActionRegistry } from '@genui/core';
+import { z } from 'zod';
+
+const registry = new ActionRegistry();
+
+// Register component with both prop schemas AND action schemas
+registry.registerWithActions(
+  'ContactForm',
+  z.object({ title: z.string(), fields: z.array(z.string()) }),  // prop schema
+  {
+    onSubmit: z.object({                                           // action schemas
+      name: z.string().min(1),
+      email: z.string().email(),
+      message: z.string().min(10),
+    }),
+    onReset: z.object({
+      reason: z.enum(['user', 'timeout', 'error']),
+    }),
+  },
+  ContactFormComponent,
+);
+
+// Validate user actions against schemas
+const result = registry.validateAction('ContactForm', 'onSubmit', {
+  name: 'John',
+  email: 'john@example.com',
+  message: 'Hello from GenUI!',
+});
+
+if (result.ok) {
+  console.log(result.action);  // Validated action with ID and timestamp
+} else {
+  console.log(result.errors);  // Field-level validation errors
+}
+```
+
+### ActionSerializer — Format for LLM
+
+```ts
+import { ActionSerializer } from '@genui/core';
+
+const serializer = new ActionSerializer();
+
+// Convert to tool call result (ready for LLM API)
+const toolCall = serializer.serialize(action);
+// → { tool: "ContactForm.onSubmit", result: { component, action, payload, actionId }, timestamp }
+
+// Or format as human-readable prompt for conversation context
+const prompt = serializer.toPrompt(action);
+// → "User interacted with "ContactForm" component:\n  Action: onSubmit\n  Payload: {...}"
+```
+
+### ActionQueue — Debounce and Conflict Resolution
+
+```ts
+import { ActionQueue } from '@genui/core';
+
+const queue = new ActionQueue({
+  debounceMs: 300,              // Wait 300ms before dispatching
+  conflictStrategy: 'latest',   // If same action fires twice, keep the latest
+  maxQueueSize: 50,             // Drop oldest when queue is full
+});
+
+queue.onAction((action) => console.log('Dispatched:', action));
+queue.onToolCall((result) => sendToLLM(result));
+
+queue.push(action);  // Debounced and deduplicated
+queue.flush();        // Force-dispatch all pending actions
+```
+
+**Conflict strategies:**
+| Strategy | Behavior |
+|---|---|
+| `latest` | Replace pending action with the same key (default) |
+| `first` | Keep the first pending action, discard duplicates |
+| `merge` | Allow all actions through, no deduplication |
+
+### CoAgentProvider + useCoAgent — React Integration
+
+```tsx
+import { CoAgentProvider, useCoAgent } from '@genui/react';
+
+// Wrap your app with the provider
+function App() {
+  return (
+    <CoAgentProvider
+      registry={registry}
+      dispatchOptions={{ debounceMs: 300 }}
+      onToolCall={(result) => sendToLLM(result)}
+      onAction={(action) => console.log('User action:', action)}
+      onValidationError={(component, action, errors) => {
+        console.warn(`Invalid ${component}.${action}:`, errors);
+      }}
+    >
+      <ChatInterface />
+    </CoAgentProvider>
+  );
+}
+
+// In any AI-rendered component:
+function ContactForm({ title, fields }: Props) {
+  const { dispatch, history, lastToolCall } = useCoAgent('ContactForm');
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    const data = new FormData(e.target as HTMLFormElement);
+    dispatch('onSubmit', {
+      name: data.get('name'),
+      email: data.get('email'),
+      message: data.get('message'),
+    });
+    // Action is validated → queued → serialized → sent to LLM
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <h2>{title}</h2>
+      {fields.map((f) => <input key={f} name={f} />)}
+      <button type="submit">Send</button>
+      <p>{history.length} actions sent</p>
+    </form>
+  );
+}
 ```
 
 ---
@@ -633,7 +808,7 @@ if (!result.ok) {
 ```
 genui/
 ├── packages/
-│   ├── core/                  # @genui/core — Schema validation, streaming & registry
+│   ├── core/                  # @genui/core — Schema validation, streaming, actions
 │   │   └── src/
 │   │       ├── registry.ts    # ComponentRegistry class
 │   │       ├── correction.ts  # Auto-correction prompt generator
@@ -644,16 +819,25 @@ genui/
 │   │       │   ├── stream-resolver.ts  # Progressive validation pipeline
 │   │       │   ├── wire-format.ts      # Token-efficient encoding
 │   │       │   └── types.ts            # Stream types
+│   │       ├── action/
+│   │       │   ├── action-registry.ts  # ActionRegistry (extends ComponentRegistry)
+│   │       │   ├── action-serializer.ts # Action → tool call result serializer
+│   │       │   ├── action-queue.ts     # Debounce, conflict resolution, dispatch
+│   │       │   └── types.ts            # Action types
 │   │       └── index.ts       # Public API exports
 │   └── react/                 # @genui/react — React hooks & components
 │       └── src/
 │           ├── use-generative-ui.ts   # useGenerativeUI hook (instant)
 │           ├── use-streaming-ui.ts    # useStreamingUI hook (progressive)
 │           ├── generative-ui.tsx      # <GenerativeUI /> component
+│           ├── co-agent-provider.tsx  # CoAgentProvider (bidirectional context)
+│           ├── co-agent-context.ts    # React context definition
+│           ├── use-co-agent.ts        # useCoAgent hook (dispatch actions)
 │           └── index.ts               # Public API exports
 ├── examples/
 │   ├── basic-registry/        # Phase 1 — Minimal registry example
-│   └── streaming-demo/        # Phase 2 — Streaming + wire format demo
+│   ├── streaming-demo/        # Phase 2 — Streaming + wire format demo
+│   └── bidirectional-demo/    # Phase 3 — Action validation + serialization demo
 ├── turbo.json                 # Turborepo config
 ├── pnpm-workspace.yaml        # Monorepo workspaces
 └── tsconfig.base.json         # Shared TypeScript strict config
@@ -677,8 +861,10 @@ pnpm build
 # Run all tests
 pnpm test
 
-# Run the example
-cd examples/basic-registry && pnpm exec tsx src/main.tsx
+# Run examples
+cd examples/basic-registry && pnpm start        # Phase 1 demo
+cd examples/streaming-demo && pnpm start         # Phase 2 demo
+cd examples/bidirectional-demo && pnpm start     # Phase 3 demo
 ```
 
 ---
@@ -691,7 +877,7 @@ GenUI is built in phases. Each phase is independently useful.
 |---|---|---|
 | **Phase 1** — Foundation | ✅ Complete | Component Registry + Schema Validation |
 | **Phase 2** — Streaming | ✅ Complete | Progressive component rendering from LLM streams |
-| **Phase 3** — Bidirectional Sync | Planned | User interactions flow back to the AI agent |
+| **Phase 3** — Bidirectional Sync | ✅ Complete | User interactions flow back to the AI agent |
 | **Phase 4** — Adapters | Planned | Pre-built adapters for shadcn/ui, Tailwind, Material UI |
 | **Phase 5** — Docs & Launch | Planned | Documentation site, playground, and v1.0 release |
 

@@ -33,8 +33,29 @@ export type {
   AbbreviationMap,
   StreamPhase,
   StreamSnapshot,
+  StreamSource,
   StreamSourceConfig,
   StreamEvent,
   RetryOptions,
   WireMessage,
 } from './stream/index.js';
+
+// Action module
+export {
+  ActionRegistry,
+  ActionNotFoundError,
+  ActionSerializer,
+  ActionQueue,
+} from './action/index.js';
+
+export type {
+  ActionRegistryEntry,
+  ActionValidationResult,
+  ActionSchemaMap,
+  Action,
+  ToolCallResult,
+  QueuedAction,
+  DispatchOptions,
+  ActionListener,
+  ToolCallListener,
+} from './action/index.js';
