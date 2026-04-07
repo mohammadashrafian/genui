@@ -1,0 +1,80 @@
+{
+  "name": "@genui/adapters",
+  "version": "0.4.0",
+  "description": "Pre-built UI adapters for shadcn/ui, Tailwind CSS, and Material UI with security-hardened schemas",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./shadcn": {
+      "import": {
+        "types": "./dist/shadcn/index.d.ts",
+        "default": "./dist/shadcn/index.js"
+      },
+      "require": {
+        "types": "./dist/shadcn/index.d.cts",
+        "default": "./dist/shadcn/index.cjs"
+      }
+    },
+    "./tailwind": {
+      "import": {
+        "types": "./dist/tailwind/index.d.ts",
+        "default": "./dist/tailwind/index.js"
+      },
+      "require": {
+        "types": "./dist/tailwind/index.d.cts",
+        "default": "./dist/tailwind/index.cjs"
+      }
+    },
+    "./mui": {
+      "import": {
+        "types": "./dist/mui/index.d.ts",
+        "default": "./dist/mui/index.js"
+      },
+      "require": {
+        "types": "./dist/mui/index.d.cts",
+        "default": "./dist/mui/index.cjs"
+      }
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "tsc --noEmit",
+    "clean": "rm -rf dist .turbo"
+  },
+  "dependencies": {
+    "@genui/core": "workspace:*"
+  },
+  "peerDependencies": {
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "^5.5.0",
+    "vitest": "^2.0.0",
+    "zod": "^3.23.0"
+  },
+  "keywords": ["genui", "adapters", "shadcn", "tailwind", "mui", "material-ui", "llm", "ui"],
+  "license": "MIT",
+  "author": "Mohammad Ashrafian (https://github.com/mohammadashrafian)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mohammadashrafian/genui.git",
+    "directory": "packages/adapters"
+  },
+  "homepage": "https://github.com/mohammadashrafian/genui#readme"
+}

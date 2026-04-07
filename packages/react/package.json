@@ -1,6 +1,6 @@
 {
   "name": "@genui/react",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "React hooks for rendering LLM-driven generative UI components",
   "type": "module",
   "main": "./dist/index.cjs",

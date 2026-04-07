@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/GenUI-v0.3.0-blue?style=for-the-badge" alt="GenUI Version" />
+  <img src="https://img.shields.io/badge/GenUI-v0.4.0-blue?style=for-the-badge" alt="GenUI Version" />
   <img src="https://img.shields.io/badge/TypeScript-Strict-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript Strict" />
   <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="MIT License" />
-  <img src="https://img.shields.io/badge/Tests-135%20Passing-brightgreen?style=for-the-badge" alt="Tests Passing" />
+  <img src="https://img.shields.io/badge/Tests-261%20Passing-brightgreen?style=for-the-badge" alt="Tests Passing" />
 </p>
 
 <h1 align="center">GenUI</h1>
@@ -59,7 +59,9 @@ LLM Output → GenUI Registry → Zod Validation → Typed React Component
 - **Tool Definitions** — Auto-generate JSON Schema descriptions of your components to send to the LLM.
 - **React Hooks** — `useGenerativeUI`, `useStreamingUI`, and `useCoAgent` hooks for the full AI-UI lifecycle.
 - **Framework-Agnostic Core** — The validation, streaming, and action engine is pure TypeScript. React hooks are a separate package.
-- **Lightweight** — ~29KB core + ~7KB React. Zero runtime dependencies beyond Zod.
+- **Security Module** — XSS-safe string sanitization, URL scheme validation, CSS injection prevention, built into every schema.
+- **Pre-built Adapters** — Ready-to-use schemas for shadcn/ui, Tailwind CSS, and Material UI (10 components each).
+- **Lightweight** — ~37KB core + ~7KB React + ~7KB per adapter. Zero runtime dependencies beyond Zod.
 
 ---
 
@@ -70,6 +72,9 @@ LLM Output → GenUI Registry → Zod Validation → Typed React Component
 ```bash
 # Using pnpm (recommended)
 pnpm add @genui/core @genui/react zod
+
+# With pre-built adapters
+pnpm add @genui/adapters
 
 # Using npm
 npm install @genui/core @genui/react zod
@@ -652,6 +657,109 @@ function ContactForm({ title, fields }: Props) {
 
 ---
 
+## Security & Adapters (Phase 4)
+
+### Security Module
+
+Every string from an LLM is untrusted. GenUI's security module provides Zod schema builders that sanitize and validate in a single pass:
+
+```ts
+import { safeString, safeUrl, safeHtml, safeCssClass } from '@genui/core';
+import { z } from 'zod';
+
+const schema = z.object({
+  title: safeString({ maxLength: 200 }),      // Strips HTML tags, removes control chars
+  link: safeUrl(),                             // Blocks javascript:, data:, vbscript: schemes
+  content: safeHtml({ allowedTags: ['b', 'i', 'p'] }),  // Keeps only safe tags, strips attributes
+  className: safeCssClass(),                   // Blocks CSS injection (expression(), url())
+});
+
+// XSS is stripped automatically:
+schema.parse({
+  title: '<script>alert(1)</script>Hello',   // → "alert(1)Hello"
+  link: 'https://example.com',              // → "https://example.com/"
+  content: '<b>bold</b><script>x</script>', // → "<b>bold</b>x"
+  className: 'btn btn-primary',             // → "btn btn-primary"
+});
+```
+
+**Configurable security policies:**
+
+```ts
+import { SecurityPolicy, DEFAULT_SECURITY_POLICY } from '@genui/core';
+
+// Strict policy: HTTPS only, shorter strings
+const strict = DEFAULT_SECURITY_POLICY.with({
+  maxStringLength: 1_000,
+  allowedUrlSchemes: ['https'],
+});
+
+// Use in schemas
+const title = safeString({ maxLength: 100, policy: strict.config });
+```
+
+### Pre-built Adapters
+
+Adapters provide security-hardened Zod schemas for popular UI libraries. You provide your own component implementations — adapters only define the schemas.
+
+```bash
+pnpm add @genui/adapters
+```
+
+**shadcn/ui:**
+
+```ts
+import { createShadcnRegistry } from '@genui/adapters/shadcn';
+import { Button, Card, Alert, Badge, Input, Select, Dialog, Tabs, Table, Avatar } from '@/components/ui';
+
+const registry = createShadcnRegistry({
+  Button, Card, Alert, Badge, Input, Select, Dialog, Tabs, Table, Avatar,
+});
+
+// Ready to use with useGenerativeUI, useStreamingUI, useCoAgent
+```
+
+**Tailwind CSS:**
+
+```ts
+import { createTailwindRegistry } from '@genui/adapters/tailwind';
+```
+
+**Material UI:**
+
+```ts
+import { createMuiRegistry } from '@genui/adapters/mui';
+```
+
+Each adapter includes **10 components** with pre-defined schemas and action schemas:
+
+| Component | shadcn/ui | Tailwind | MUI |
+|---|---|---|---|
+| Button | variants: default, destructive, outline, secondary, ghost, link | variants: primary, secondary, danger, ghost, link | variants: text, contained, outlined + colors |
+| Card | title, description, content, footer | title, subtitle, body, footer | title, subheader, content, media, actions |
+| Alert | default, destructive | info, success, warning, error + dismissible | severity + variant (standard, filled, outlined) |
+| Badge/Chip | default, secondary, destructive, outline | color-based (gray through pink) | Chip with filled/outlined + colors |
+| Input/TextField | type, placeholder, disabled | + label, helperText, error | + variant, fullWidth, multiline, rows |
+| Select | options, placeholder | + label | + variant, fullWidth |
+| Dialog | title, description, content, open | same | + maxWidth, fullWidth |
+| Tabs | value-based tabs array | same | + variant (standard, scrollable, fullWidth) |
+| Table | headers + rows | + striped, hoverable | + size, stickyHeader |
+| Avatar | src, alt, fallback | + initials, size | + variant (circular, rounded, square) |
+
+**Customize individual schemas:**
+
+```ts
+import { buttonSchema } from '@genui/adapters/shadcn';
+import { safeString } from '@genui/core';
+
+const customButton = buttonSchema.extend({
+  icon: safeString({ maxLength: 64 }).optional(),
+  tooltip: safeString({ maxLength: 256 }).optional(),
+});
+```
+
+---
+
 ## Full Example: AI Chat with Generative UI
 
 Here's a complete example showing how GenUI fits into an AI chat application:
@@ -808,39 +916,42 @@ if (!result.ok) {
 ```
 genui/
 ├── packages/
-│   ├── core/                  # @genui/core — Schema validation, streaming, actions
+│   ├── core/                  # @genui/core — Registry, streaming, actions, security
 │   │   └── src/
 │   │       ├── registry.ts    # ComponentRegistry class
 │   │       ├── correction.ts  # Auto-correction prompt generator
 │   │       ├── errors.ts      # Custom error classes
 │   │       ├── types.ts       # TypeScript types & interfaces
-│   │       ├── stream/
-│   │       │   ├── stream-parser.ts    # Incremental JSON parser
-│   │       │   ├── stream-resolver.ts  # Progressive validation pipeline
-│   │       │   ├── wire-format.ts      # Token-efficient encoding
-│   │       │   └── types.ts            # Stream types
-│   │       ├── action/
-│   │       │   ├── action-registry.ts  # ActionRegistry (extends ComponentRegistry)
-│   │       │   ├── action-serializer.ts # Action → tool call result serializer
-│   │       │   ├── action-queue.ts     # Debounce, conflict resolution, dispatch
-│   │       │   └── types.ts            # Action types
-│   │       └── index.ts       # Public API exports
-│   └── react/                 # @genui/react — React hooks & components
+│   │       ├── stream/        # Streaming engine
+│   │       ├── action/        # Bidirectional action system
+│   │       ├── security/      # XSS sanitization, URL validation, safe schemas
+│   │       │   ├── sanitize.ts      # State-machine HTML stripper (ReDoS-safe)
+│   │       │   ├── url-validator.ts # URL scheme validation
+│   │       │   ├── safe-schemas.ts  # safeString, safeUrl, safeHtml, safeCssClass
+│   │       │   ├── policy.ts        # SecurityPolicy config
+│   │       │   └── types.ts         # Security types
+│   │       └── index.ts
+│   ├── react/                 # @genui/react — React hooks & components
+│   │   └── src/
+│   │       ├── use-generative-ui.ts   # useGenerativeUI hook
+│   │       ├── use-streaming-ui.ts    # useStreamingUI hook
+│   │       ├── generative-ui.tsx      # <GenerativeUI /> component
+│   │       ├── co-agent-provider.tsx  # CoAgentProvider
+│   │       ├── use-co-agent.ts        # useCoAgent hook
+│   │       └── index.ts
+│   └── adapters/              # @genui/adapters — Pre-built UI library schemas
 │       └── src/
-│           ├── use-generative-ui.ts   # useGenerativeUI hook (instant)
-│           ├── use-streaming-ui.ts    # useStreamingUI hook (progressive)
-│           ├── generative-ui.tsx      # <GenerativeUI /> component
-│           ├── co-agent-provider.tsx  # CoAgentProvider (bidirectional context)
-│           ├── co-agent-context.ts    # React context definition
-│           ├── use-co-agent.ts        # useCoAgent hook (dispatch actions)
-│           └── index.ts               # Public API exports
+│           ├── shared/        # Base schemas, registry factory builder
+│           ├── shadcn/        # shadcn/ui adapter (10 components)
+│           ├── tailwind/      # Tailwind CSS adapter (10 components)
+│           └── mui/           # Material UI adapter (10 components)
 ├── examples/
-│   ├── basic-registry/        # Phase 1 — Minimal registry example
-│   ├── streaming-demo/        # Phase 2 — Streaming + wire format demo
-│   └── bidirectional-demo/    # Phase 3 — Action validation + serialization demo
-├── turbo.json                 # Turborepo config
-├── pnpm-workspace.yaml        # Monorepo workspaces
-└── tsconfig.base.json         # Shared TypeScript strict config
+│   ├── basic-registry/        # Phase 1 demo
+│   ├── streaming-demo/        # Phase 2 demo
+│   └── bidirectional-demo/    # Phase 3 demo
+├── turbo.json
+├── pnpm-workspace.yaml
+└── tsconfig.base.json
 ```
 
 ---
@@ -878,7 +989,7 @@ GenUI is built in phases. Each phase is independently useful.
 | **Phase 1** — Foundation | ✅ Complete | Component Registry + Schema Validation |
 | **Phase 2** — Streaming | ✅ Complete | Progressive component rendering from LLM streams |
 | **Phase 3** — Bidirectional Sync | ✅ Complete | User interactions flow back to the AI agent |
-| **Phase 4** — Adapters | Planned | Pre-built adapters for shadcn/ui, Tailwind, Material UI |
+| **Phase 4** — Adapters | ✅ Complete | Security module + pre-built adapters for shadcn/ui, Tailwind, Material UI |
 | **Phase 5** — Docs & Launch | Planned | Documentation site, playground, and v1.0 release |
 
 ---
