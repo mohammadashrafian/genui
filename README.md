@@ -419,7 +419,7 @@ const { dispatch, history, lastToolCall, context } = useCoAgent('ComponentName')
 
 ---
 
-## Streaming (Phase 2)
+## Streaming
 
 GenUI renders components progressively as LLM tokens arrive — users see UI building up in real time instead of waiting for the full response.
 
@@ -470,7 +470,7 @@ function StreamingChat() {
 }
 ```
 
-The hook transitions through phases: `pending → skeleton → partial → complete`
+The hook transitions through states: `pending → skeleton → partial → complete`
 
 ### Wire Format — Save 20-40% on Output Tokens
 
@@ -517,7 +517,7 @@ await resolver.consume(
 
 ---
 
-## Bidirectional Sync (Phase 3)
+## Bidirectional Sync
 
 GenUI doesn't just render AI output — it lets your UI talk back. When users interact with AI-rendered components, those actions are validated, queued, and serialized into structured tool call results that the AI can understand.
 
@@ -657,7 +657,7 @@ function ContactForm({ title, fields }: Props) {
 
 ---
 
-## Security & Adapters (Phase 4)
+## Security & Adapters
 
 ### Security Module
 
@@ -946,9 +946,9 @@ genui/
 │           ├── tailwind/      # Tailwind CSS adapter (10 components)
 │           └── mui/           # Material UI adapter (10 components)
 ├── examples/
-│   ├── basic-registry/        # Phase 1 demo
-│   ├── streaming-demo/        # Phase 2 demo
-│   └── bidirectional-demo/    # Phase 3 demo
+│   ├── basic-registry/        # Registry + validation demo
+│   ├── streaming-demo/        # Streaming + wire format demo
+│   └── bidirectional-demo/    # Bidirectional sync demo
 ├── turbo.json
 ├── pnpm-workspace.yaml
 └── tsconfig.base.json
@@ -973,24 +973,10 @@ pnpm build
 pnpm test
 
 # Run examples
-cd examples/basic-registry && pnpm start        # Phase 1 demo
-cd examples/streaming-demo && pnpm start         # Phase 2 demo
-cd examples/bidirectional-demo && pnpm start     # Phase 3 demo
+cd examples/basic-registry && pnpm start        # Registry + validation demo
+cd examples/streaming-demo && pnpm start         # Streaming + wire format demo
+cd examples/bidirectional-demo && pnpm start     # Bidirectional sync demo
 ```
-
----
-
-## Roadmap
-
-GenUI is built in phases. Each phase is independently useful.
-
-| Phase | Status | Description |
-|---|---|---|
-| **Phase 1** — Foundation | ✅ Complete | Component Registry + Schema Validation |
-| **Phase 2** — Streaming | ✅ Complete | Progressive component rendering from LLM streams |
-| **Phase 3** — Bidirectional Sync | ✅ Complete | User interactions flow back to the AI agent |
-| **Phase 4** — Adapters | ✅ Complete | Security module + pre-built adapters for shadcn/ui, Tailwind, Material UI |
-| **Phase 5** — Docs & Launch | Planned | Documentation site, playground, and v1.0 release |
 
 ---
 
