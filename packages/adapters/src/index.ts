@@ -1,5 +1,6 @@
 // Shared types
 export type {
+  AnyComponent,
   ComponentMap,
   ComponentDefinition,
   AdapterConfig,

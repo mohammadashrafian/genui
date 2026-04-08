@@ -2,7 +2,7 @@
   <img src="https://img.shields.io/badge/GenUI-v0.4.0-blue?style=for-the-badge" alt="GenUI Version" />
   <img src="https://img.shields.io/badge/TypeScript-Strict-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript Strict" />
   <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="MIT License" />
-  <img src="https://img.shields.io/badge/Tests-261%20Passing-brightgreen?style=for-the-badge" alt="Tests Passing" />
+  <img src="https://img.shields.io/badge/Tests-289%20Passing-brightgreen?style=for-the-badge" alt="Tests Passing" />
 </p>
 
 <h1 align="center">GenUI</h1>
@@ -61,13 +61,29 @@ LLM Output → GenUI Registry → Zod Validation → Typed React Component
 - **Framework-Agnostic Core** — The validation, streaming, and action engine is pure TypeScript. React hooks are a separate package.
 - **Security Module** — XSS-safe string sanitization, URL scheme validation, CSS injection prevention, built into every schema.
 - **Pre-built Adapters** — Ready-to-use schemas for shadcn/ui, Tailwind CSS, and Material UI (10 components each).
-- **Lightweight** — ~37KB core + ~7KB React + ~7KB per adapter. Zero runtime dependencies beyond Zod.
+- **CLI Scaffolding** — `npx genui init` generates a registry file for your chosen adapter. Zero manual setup.
+- **Dev Error Overlay** — Rich floating overlay showing validation errors, raw LLM output, and correction prompts during development. Tree-shakes to zero in production.
+- **Lightweight** — ~37KB core + ~14KB React + ~7KB per adapter. Zero runtime dependencies beyond Zod.
 
 ---
 
 ## Quick Start
 
-### Installation
+### Scaffolding with the CLI
+
+The fastest way to get started:
+
+```bash
+npx genui init
+```
+
+The CLI will ask you to:
+1. Choose your UI adapter (shadcn/ui, Tailwind CSS, or Material UI)
+2. Pick an output directory (e.g., `src/lib`)
+
+It generates a ready-to-use `registry.ts` file with all component imports and shows you exactly what to install.
+
+### Manual Installation
 
 ```bash
 # Using pnpm (recommended)
@@ -385,6 +401,43 @@ import { GenerativeUI } from '@genui/react';
 | `output` | `LLMComponentOutput` | Yes | The LLM output to render |
 | `fallback` | `ReactNode` | No | What to show on failure |
 | `onError` | `(prompt, errors) => void` | No | Called when validation fails |
+
+#### `<DevGenerativeUI />`
+
+Drop-in replacement for `<GenerativeUI />` that shows a rich error overlay when validation fails in development mode. In production, it behaves identically to `GenerativeUI` (the overlay tree-shakes away).
+
+```tsx
+import { DevGenerativeUI } from '@genui/react';
+
+<DevGenerativeUI
+  registry={registry}
+  output={llmOutput}
+  fallback={<div>Failed to render</div>}
+  showOverlay={true}  // default: true in development
+/>
+```
+
+The overlay shows:
+- Component name and error count
+- Each validation error with field path, expected type, and received value
+- Collapsible raw LLM output (JSON)
+- Collapsible correction prompt with copy button
+
+#### `<ErrorOverlay />`
+
+Use the overlay standalone for custom error handling:
+
+```tsx
+import { ErrorOverlay } from '@genui/react';
+
+// Show when you have a ResolveError
+<ErrorOverlay
+  error={resolveError}
+  output={llmOutput}
+  onDismiss={() => setShowOverlay(false)}
+  onCopyPrompt={() => toast('Copied!')}
+/>
+```
 
 #### `<CoAgentProvider />`
 
@@ -936,15 +989,22 @@ genui/
 │   │       ├── use-generative-ui.ts   # useGenerativeUI hook
 │   │       ├── use-streaming-ui.ts    # useStreamingUI hook
 │   │       ├── generative-ui.tsx      # <GenerativeUI /> component
+│   │       ├── dev-generative-ui.tsx  # <DevGenerativeUI /> with error overlay
+│   │       ├── error-overlay.tsx      # Rich dev-mode error overlay
 │   │       ├── co-agent-provider.tsx  # CoAgentProvider
 │   │       ├── use-co-agent.ts        # useCoAgent hook
 │   │       └── index.ts
-│   └── adapters/              # @genui/adapters — Pre-built UI library schemas
+│   ├── adapters/              # @genui/adapters — Pre-built UI library schemas
+│   │   └── src/
+│   │       ├── shared/        # Base schemas, registry factory builder
+│   │       ├── shadcn/        # shadcn/ui adapter (10 components)
+│   │       ├── tailwind/      # Tailwind CSS adapter (10 components)
+│   │       └── mui/           # Material UI adapter (10 components)
+│   └── cli/                   # @genui/cli — CLI scaffolding tool
 │       └── src/
-│           ├── shared/        # Base schemas, registry factory builder
-│           ├── shadcn/        # shadcn/ui adapter (10 components)
-│           ├── tailwind/      # Tailwind CSS adapter (10 components)
-│           └── mui/           # Material UI adapter (10 components)
+│           ├── index.ts       # CLI entry point (npx genui init)
+│           ├── commands/      # Command implementations
+│           └── templates/     # Registry template generators
 ├── examples/
 │   ├── basic-registry/        # Registry + validation demo
 │   ├── streaming-demo/        # Streaming + wire format demo

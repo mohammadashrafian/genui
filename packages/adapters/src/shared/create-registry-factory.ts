@@ -12,8 +12,7 @@
  */
 
 import { ActionRegistry } from '@genui/core';
-import type { ComponentType } from '@genui/core';
-import type { ComponentDefinition, AdapterConfig } from '../types.js';
+import type { AnyComponent, ComponentDefinition, AdapterConfig } from '../types.js';
 
 /**
  * Create a registry factory for an adapter.
@@ -40,7 +39,7 @@ export function createRegistryFactory<
   const definitionEntries = Object.entries(definitions) as [TNames, ComponentDefinition][];
 
   return function createRegistry(
-    components: { [K in TNames]: ComponentType<unknown> },
+    components: { [K in TNames]: AnyComponent },
     config?: AdapterConfig,
   ): ActionRegistry {
     // Validate all components are provided

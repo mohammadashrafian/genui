@@ -12,6 +12,11 @@ export { useCoAgent, CoAgentContextError } from './use-co-agent.js';
 export type { UseCoAgentResult } from './use-co-agent.js';
 export type { CoAgentContextValue } from './co-agent-context.js';
 
+export { ErrorOverlay } from './error-overlay.js';
+export type { ErrorOverlayProps } from './error-overlay.js';
+export { DevGenerativeUI } from './dev-generative-ui.js';
+export type { DevGenerativeUIProps } from './dev-generative-ui.js';
+
 // Re-export core types for convenience
 export type {
   ComponentRegistry,
