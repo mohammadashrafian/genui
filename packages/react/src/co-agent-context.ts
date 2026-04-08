@@ -5,7 +5,7 @@ import type {
   ActionSerializer,
   Action,
   ToolCallResult,
-} from '@genui/core';
+} from '@genuikit/core';
 
 /** The shape of the CoAgent context value. */
 export interface CoAgentContextValue {

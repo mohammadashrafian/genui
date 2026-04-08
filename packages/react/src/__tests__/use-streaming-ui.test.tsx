@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { z } from 'zod';
-import { ComponentRegistry } from '@genui/core';
+import { ComponentRegistry } from '@genuikit/core';
 import { useStreamingUI } from '../use-streaming-ui.js';
 
 const buttonSchema = z.object({

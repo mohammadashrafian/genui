@@ -1,7 +1,7 @@
 import { initCommand } from './commands/init.js';
 
 const HELP_TEXT = `
-  \x1b[1m@genui/cli\x1b[0m — Scaffold GenUI component registries
+  \x1b[1m@genuikit/cli\x1b[0m — Scaffold GenUI component registries
 
   \x1b[1mUsage:\x1b[0m
     genui <command>

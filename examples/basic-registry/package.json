@@ -1,5 +1,5 @@
 {
-  "name": "@genui/example-basic-registry",
+  "name": "@genuikit/example-basic-registry",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -8,8 +8,8 @@
     "build": "echo 'example — no build needed'"
   },
   "dependencies": {
-    "@genui/core": "workspace:*",
-    "@genui/react": "workspace:*",
+    "@genuikit/core": "workspace:*",
+    "@genuikit/react": "workspace:*",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
     "zod": "^3.23.0"

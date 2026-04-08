@@ -1,5 +1,5 @@
 import { useContext, useCallback, useMemo } from 'react';
-import type { Action, ToolCallResult } from '@genui/core';
+import type { Action, ToolCallResult } from '@genuikit/core';
 import { CoAgentContext } from './co-agent-context.js';
 import type { CoAgentContextValue } from './co-agent-context.js';
 

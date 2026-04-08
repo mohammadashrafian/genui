@@ -66,7 +66,7 @@ jobs:
         run: pnpm turbo build --filter='*'
 
       - name: Type check core
-        run: pnpm --filter @genui/core lint
+        run: pnpm --filter @genuikit/core lint
 
       - name: Type check react
-        run: pnpm --filter @genui/react lint
+        run: pnpm --filter @genuikit/react lint

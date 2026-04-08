@@ -87,16 +87,16 @@ It generates a ready-to-use `registry.ts` file with all component imports and sh
 
 ```bash
 # Using pnpm (recommended)
-pnpm add @genui/core @genui/react zod
+pnpm add @genuikit/core @genuikit/react zod
 
 # With pre-built adapters
-pnpm add @genui/adapters
+pnpm add @genuikit/adapters
 
 # Using npm
-npm install @genui/core @genui/react zod
+npm install @genuikit/core @genuikit/react zod
 
 # Using yarn
-yarn add @genui/core @genui/react zod
+yarn add @genuikit/core @genuikit/react zod
 ```
 
 ### 1. Define Your Component + Schema
@@ -133,7 +133,7 @@ export function WeatherCard({ city, temperature, unit, condition, humidity }: z.
 
 ```tsx
 // registry.ts
-import { ComponentRegistry } from '@genui/core';
+import { ComponentRegistry } from '@genuikit/core';
 import { WeatherCard, weatherCardSchema } from './components/weather-card';
 import { StockTicker, stockTickerSchema } from './components/stock-ticker';
 import { AlertBanner, alertBannerSchema } from './components/alert-banner';
@@ -151,7 +151,7 @@ registry
 
 ```tsx
 // chat-message.tsx
-import { useGenerativeUI } from '@genui/react';
+import { useGenerativeUI } from '@genuikit/react';
 import { registry } from './registry';
 
 function ChatMessage({ llmOutput }) {
@@ -189,7 +189,7 @@ When LLM output arrives, GenUI:
 3. Returns the component + validated props, or an error with a correction prompt
 
 ```tsx
-import { ComponentRegistry } from '@genui/core';
+import { ComponentRegistry } from '@genuikit/core';
 import { z } from 'zod';
 
 const registry = new ComponentRegistry();
@@ -299,12 +299,12 @@ Include this in your system prompt so the LLM knows exactly what props to produc
 
 ## API Reference
 
-### `@genui/core`
+### `@genuikit/core`
 
 #### `ComponentRegistry`
 
 ```tsx
-import { ComponentRegistry } from '@genui/core';
+import { ComponentRegistry } from '@genuikit/core';
 
 const registry = new ComponentRegistry(options?: RegistryOptions);
 ```
@@ -360,12 +360,12 @@ The shape your LLM should produce:
 
 ---
 
-### `@genui/react`
+### `@genuikit/react`
 
 #### `useGenerativeUI`
 
 ```tsx
-import { useGenerativeUI } from '@genui/react';
+import { useGenerativeUI } from '@genuikit/react';
 
 const { element, ok, correctionPrompt, errors, result } = useGenerativeUI(registry, output);
 ```
@@ -383,7 +383,7 @@ const { element, ok, correctionPrompt, errors, result } = useGenerativeUI(regist
 Declarative alternative to the hook:
 
 ```tsx
-import { GenerativeUI } from '@genui/react';
+import { GenerativeUI } from '@genuikit/react';
 
 <GenerativeUI
   registry={registry}
@@ -407,7 +407,7 @@ import { GenerativeUI } from '@genui/react';
 Drop-in replacement for `<GenerativeUI />` that shows a rich error overlay when validation fails in development mode. In production, it behaves identically to `GenerativeUI` (the overlay tree-shakes away).
 
 ```tsx
-import { DevGenerativeUI } from '@genui/react';
+import { DevGenerativeUI } from '@genuikit/react';
 
 <DevGenerativeUI
   registry={registry}
@@ -428,7 +428,7 @@ The overlay shows:
 Use the overlay standalone for custom error handling:
 
 ```tsx
-import { ErrorOverlay } from '@genui/react';
+import { ErrorOverlay } from '@genuikit/react';
 
 // Show when you have a ResolveError
 <ErrorOverlay
@@ -444,7 +444,7 @@ import { ErrorOverlay } from '@genui/react';
 Wraps your app to enable bidirectional AI-UI communication:
 
 ```tsx
-import { CoAgentProvider } from '@genui/react';
+import { CoAgentProvider } from '@genuikit/react';
 ```
 
 | Prop | Type | Required | Description |
@@ -458,7 +458,7 @@ import { CoAgentProvider } from '@genui/react';
 #### `useCoAgent`
 
 ```tsx
-import { useCoAgent } from '@genui/react';
+import { useCoAgent } from '@genuikit/react';
 
 const { dispatch, history, lastToolCall, context } = useCoAgent('ComponentName');
 ```
@@ -479,7 +479,7 @@ GenUI renders components progressively as LLM tokens arrive — users see UI bui
 ### StreamParser — Incremental JSON Parsing
 
 ```ts
-import { StreamParser } from '@genui/core';
+import { StreamParser } from '@genuikit/core';
 
 const parser = new StreamParser();
 
@@ -495,7 +495,7 @@ console.log(parser.complete);  // true when JSON is naturally complete
 ### useStreamingUI — Progressive React Rendering
 
 ```tsx
-import { useStreamingUI } from '@genui/react';
+import { useStreamingUI } from '@genuikit/react';
 
 function StreamingChat() {
   const { element, isStreaming, start, snapshot } = useStreamingUI(registry, {
@@ -528,7 +528,7 @@ The hook transitions through states: `pending → skeleton → partial → compl
 ### Wire Format — Save 20-40% on Output Tokens
 
 ```ts
-import { encode, decode, generateWireFormatPrompt } from '@genui/core';
+import { encode, decode, generateWireFormatPrompt } from '@genuikit/core';
 
 // Standard: {"type":"WeatherCard","props":{"city":"Tokyo","temperature":22}}  (74 chars)
 // Wire:     {"t":"c","n":"WeatherCard","p":{"c":"Tokyo","t":22}}              (52 chars → 30% savings)
@@ -544,7 +544,7 @@ const prompt = generateWireFormatPrompt(abbreviations);
 ### StreamResolver — Full Pipeline
 
 ```ts
-import { StreamResolver } from '@genui/core';
+import { StreamResolver } from '@genuikit/core';
 
 const resolver = new StreamResolver({
   registry,
@@ -583,7 +583,7 @@ AI Agent ← Tool Call ← ActionQueue ← Validated Action
 ### ActionRegistry — Components with Action Schemas
 
 ```ts
-import { ActionRegistry } from '@genui/core';
+import { ActionRegistry } from '@genuikit/core';
 import { z } from 'zod';
 
 const registry = new ActionRegistry();
@@ -622,7 +622,7 @@ if (result.ok) {
 ### ActionSerializer — Format for LLM
 
 ```ts
-import { ActionSerializer } from '@genui/core';
+import { ActionSerializer } from '@genuikit/core';
 
 const serializer = new ActionSerializer();
 
@@ -638,7 +638,7 @@ const prompt = serializer.toPrompt(action);
 ### ActionQueue — Debounce and Conflict Resolution
 
 ```ts
-import { ActionQueue } from '@genui/core';
+import { ActionQueue } from '@genuikit/core';
 
 const queue = new ActionQueue({
   debounceMs: 300,              // Wait 300ms before dispatching
@@ -663,7 +663,7 @@ queue.flush();        // Force-dispatch all pending actions
 ### CoAgentProvider + useCoAgent — React Integration
 
 ```tsx
-import { CoAgentProvider, useCoAgent } from '@genui/react';
+import { CoAgentProvider, useCoAgent } from '@genuikit/react';
 
 // Wrap your app with the provider
 function App() {
@@ -717,7 +717,7 @@ function ContactForm({ title, fields }: Props) {
 Every string from an LLM is untrusted. GenUI's security module provides Zod schema builders that sanitize and validate in a single pass:
 
 ```ts
-import { safeString, safeUrl, safeHtml, safeCssClass } from '@genui/core';
+import { safeString, safeUrl, safeHtml, safeCssClass } from '@genuikit/core';
 import { z } from 'zod';
 
 const schema = z.object({
@@ -739,7 +739,7 @@ schema.parse({
 **Configurable security policies:**
 
 ```ts
-import { SecurityPolicy, DEFAULT_SECURITY_POLICY } from '@genui/core';
+import { SecurityPolicy, DEFAULT_SECURITY_POLICY } from '@genuikit/core';
 
 // Strict policy: HTTPS only, shorter strings
 const strict = DEFAULT_SECURITY_POLICY.with({
@@ -756,13 +756,13 @@ const title = safeString({ maxLength: 100, policy: strict.config });
 Adapters provide security-hardened Zod schemas for popular UI libraries. You provide your own component implementations — adapters only define the schemas.
 
 ```bash
-pnpm add @genui/adapters
+pnpm add @genuikit/adapters
 ```
 
 **shadcn/ui:**
 
 ```ts
-import { createShadcnRegistry } from '@genui/adapters/shadcn';
+import { createShadcnRegistry } from '@genuikit/adapters/shadcn';
 import { Button, Card, Alert, Badge, Input, Select, Dialog, Tabs, Table, Avatar } from '@/components/ui';
 
 const registry = createShadcnRegistry({
@@ -775,13 +775,13 @@ const registry = createShadcnRegistry({
 **Tailwind CSS:**
 
 ```ts
-import { createTailwindRegistry } from '@genui/adapters/tailwind';
+import { createTailwindRegistry } from '@genuikit/adapters/tailwind';
 ```
 
 **Material UI:**
 
 ```ts
-import { createMuiRegistry } from '@genui/adapters/mui';
+import { createMuiRegistry } from '@genuikit/adapters/mui';
 ```
 
 Each adapter includes **10 components** with pre-defined schemas and action schemas:
@@ -802,8 +802,8 @@ Each adapter includes **10 components** with pre-defined schemas and action sche
 **Customize individual schemas:**
 
 ```ts
-import { buttonSchema } from '@genui/adapters/shadcn';
-import { safeString } from '@genui/core';
+import { buttonSchema } from '@genuikit/adapters/shadcn';
+import { safeString } from '@genuikit/core';
 
 const customButton = buttonSchema.extend({
   icon: safeString({ maxLength: 64 }).optional(),
@@ -880,7 +880,7 @@ function Stat({ label, value, unit, trend }: z.infer<typeof statSchema>) {
 }
 
 // 2. Create the registry
-import { ComponentRegistry } from '@genui/core';
+import { ComponentRegistry } from '@genuikit/core';
 
 const registry = new ComponentRegistry();
 registry
@@ -890,7 +890,7 @@ registry
   .register('Stat',   statSchema,   Stat);
 
 // 3. Use in your chat app
-import { useGenerativeUI } from '@genui/react';
+import { useGenerativeUI } from '@genuikit/react';
 
 function AIChatMessage({ message }) {
   // The LLM returns: { type: 'Stat', props: { label: 'Revenue', value: 42500, unit: 'USD', trend: 'up' } }
@@ -969,7 +969,7 @@ if (!result.ok) {
 ```
 genui/
 ├── packages/
-│   ├── core/                  # @genui/core — Registry, streaming, actions, security
+│   ├── core/                  # @genuikit/core — Registry, streaming, actions, security
 │   │   └── src/
 │   │       ├── registry.ts    # ComponentRegistry class
 │   │       ├── correction.ts  # Auto-correction prompt generator
@@ -984,7 +984,7 @@ genui/
 │   │       │   ├── policy.ts        # SecurityPolicy config
 │   │       │   └── types.ts         # Security types
 │   │       └── index.ts
-│   ├── react/                 # @genui/react — React hooks & components
+│   ├── react/                 # @genuikit/react — React hooks & components
 │   │   └── src/
 │   │       ├── use-generative-ui.ts   # useGenerativeUI hook
 │   │       ├── use-streaming-ui.ts    # useStreamingUI hook
@@ -994,13 +994,13 @@ genui/
 │   │       ├── co-agent-provider.tsx  # CoAgentProvider
 │   │       ├── use-co-agent.ts        # useCoAgent hook
 │   │       └── index.ts
-│   ├── adapters/              # @genui/adapters — Pre-built UI library schemas
+│   ├── adapters/              # @genuikit/adapters — Pre-built UI library schemas
 │   │   └── src/
 │   │       ├── shared/        # Base schemas, registry factory builder
 │   │       ├── shadcn/        # shadcn/ui adapter (10 components)
 │   │       ├── tailwind/      # Tailwind CSS adapter (10 components)
 │   │       └── mui/           # Material UI adapter (10 components)
-│   └── cli/                   # @genui/cli — CLI scaffolding tool
+│   └── cli/                   # @genuikit/cli — CLI scaffolding tool
 │       └── src/
 │           ├── index.ts       # CLI entry point (npx genui init)
 │           ├── commands/      # Command implementations

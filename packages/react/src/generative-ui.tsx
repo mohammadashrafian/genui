@@ -1,5 +1,5 @@
 import { createElement } from 'react';
-import type { ComponentRegistry, LLMComponentOutput } from '@genui/core';
+import type { ComponentRegistry, LLMComponentOutput } from '@genuikit/core';
 
 export interface GenerativeUIProps {
   /** The component registry to resolve against. */

@@ -24,7 +24,7 @@ export function getAdapterChoices(): readonly AdapterChoice[] {
 // ---------------------------------------------------------------------------
 
 function shadcnTemplate(): string {
-  return `import { createShadcnRegistry } from '@genui/adapters/shadcn';
+  return `import { createShadcnRegistry } from '@genuikit/adapters/shadcn';
 
 // Import your shadcn/ui components
 import { Button } from '@/components/ui/button';
@@ -54,7 +54,7 @@ export const registry = createShadcnRegistry({
 }
 
 function tailwindTemplate(): string {
-  return `import { createTailwindRegistry } from '@genui/adapters/tailwind';
+  return `import { createTailwindRegistry } from '@genuikit/adapters/tailwind';
 
 // Create your Tailwind CSS component implementations
 // Each component receives validated props from the LLM
@@ -87,7 +87,7 @@ export const registry = createTailwindRegistry({
 }
 
 function muiTemplate(): string {
-  return `import { createMuiRegistry } from '@genui/adapters/mui';
+  return `import { createMuiRegistry } from '@genuikit/adapters/mui';
 
 // Import your MUI components
 import Button from '@mui/material/Button';
@@ -141,7 +141,7 @@ export function generateRegistryTemplate(adapter: AdapterChoice): string {
  * Return the set of npm packages a user needs to install for the chosen adapter.
  */
 export function getDependencies(adapter: AdapterChoice): string[] {
-  const base = ['@genui/core', '@genui/adapters', 'zod'];
+  const base = ['@genuikit/core', '@genuikit/adapters', 'zod'];
   const adapterDeps: Record<AdapterChoice, string[]> = {
     shadcn: [],
     tailwind: [],

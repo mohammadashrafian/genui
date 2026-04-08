@@ -135,6 +135,6 @@ export async function initCommand(): Promise<void> {
   log('    3. Use the registry in your app:');
   log('');
   log(`       \x1b[36mimport { registry } from './${relativeDir}/registry';\x1b[0m`);
-  log(`       \x1b[36mimport { GenerativeUI } from '@genui/react';\x1b[0m`);
+  log(`       \x1b[36mimport { GenerativeUI } from '@genuikit/react';\x1b[0m`);
   log('');
 }

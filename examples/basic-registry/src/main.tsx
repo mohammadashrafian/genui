@@ -9,8 +9,8 @@
  * 5. Generate tool definitions for LLMs
  */
 
-import { ComponentRegistry } from '@genui/core';
-import type { LLMComponentOutput } from '@genui/core';
+import { ComponentRegistry } from '@genuikit/core';
+import type { LLMComponentOutput } from '@genuikit/core';
 import { Button, Card, Alert, Stat, buttonSchema, cardSchema, alertSchema, statSchema } from './components.js';
 
 // ─── 1. Create and populate the registry ───────────────────

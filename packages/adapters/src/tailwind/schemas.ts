@@ -7,7 +7,7 @@
  */
 
 import { z } from 'zod';
-import { safeString, safeUrl } from '@genui/core';
+import { safeString, safeUrl } from '@genuikit/core';
 import { childrenSchema, classNameSchema, ariaLabelSchema } from '../shared/base-schemas.js';
 
 export const buttonSchema = z.object({

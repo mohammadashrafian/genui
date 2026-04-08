@@ -1,5 +1,5 @@
 {
-  "name": "@genui/react",
+  "name": "@genuikit/react",
   "version": "0.4.0",
   "description": "React hooks for rendering LLM-driven generative UI components",
   "type": "module",
@@ -27,7 +27,7 @@
     "clean": "rm -rf dist .turbo"
   },
   "dependencies": {
-    "@genui/core": "workspace:*"
+    "@genuikit/core": "workspace:*"
   },
   "peerDependencies": {
     "react": ">=18.0.0",

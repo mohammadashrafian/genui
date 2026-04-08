@@ -1,5 +1,5 @@
 {
-  "name": "@genui/adapters",
+  "name": "@genuikit/adapters",
   "version": "0.4.0",
   "description": "Pre-built UI adapters for shadcn/ui, Tailwind CSS, and Material UI with security-hardened schemas",
   "type": "module",
@@ -57,7 +57,7 @@
     "clean": "rm -rf dist .turbo"
   },
   "dependencies": {
-    "@genui/core": "workspace:*"
+    "@genuikit/core": "workspace:*"
   },
   "peerDependencies": {
     "zod": "^3.23.0"

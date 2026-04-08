@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import type { ResolveError } from '@genui/core';
+import type { ResolveError } from '@genuikit/core';
 import { GenerativeUI } from './generative-ui.js';
 import type { GenerativeUIProps } from './generative-ui.js';
 import { ErrorOverlay } from './error-overlay.js';

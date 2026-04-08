@@ -1,10 +1,10 @@
 /**
  * Shared schema fragments used across all adapters.
- * All string types use security-hardened schemas from @genui/core.
+ * All string types use security-hardened schemas from @genuikit/core.
  */
 
 import { z } from 'zod';
-import { safeString, safeUrl, safeCssClass } from '@genui/core';
+import { safeString, safeUrl, safeCssClass } from '@genuikit/core';
 
 // ─── Reusable prop schemas ────────────────────────────────────────
 

@@ -4,14 +4,14 @@ import {
   ActionRegistry,
   ActionQueue,
   ActionSerializer,
-} from '@genui/core';
+} from '@genuikit/core';
 import type {
   Action,
   ToolCallResult,
   DispatchOptions,
   ActionListener,
   ToolCallListener,
-} from '@genui/core';
+} from '@genuikit/core';
 import { CoAgentContext } from './co-agent-context.js';
 import type { CoAgentContextValue } from './co-agent-context.js';
 

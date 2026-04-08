@@ -18,8 +18,8 @@ import {
   encodeBatch,
   estimateSavings,
   generateWireFormatPrompt,
-} from '@genui/core';
-import type { StreamEvent } from '@genui/core';
+} from '@genuikit/core';
+import type { StreamEvent } from '@genuikit/core';
 
 // ─── Setup ──────────────────────────────────────────────────
 

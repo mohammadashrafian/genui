@@ -3,7 +3,7 @@ import { renderHook, act } from '@testing-library/react';
 import { z } from 'zod';
 import React from 'react';
 import type { ReactNode } from 'react';
-import { ActionRegistry } from '@genui/core';
+import { ActionRegistry } from '@genuikit/core';
 import { CoAgentProvider } from '../co-agent-provider.js';
 import { useCoAgent, CoAgentContextError } from '../use-co-agent.js';
 

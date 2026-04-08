@@ -26,10 +26,10 @@ importers:
 
   examples/basic-registry:
     dependencies:
-      '@genui/core':
+      '@genuikit/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@genui/react':
+      '@genuikit/react':
         specifier: workspace:*
         version: link:../../packages/react
       react:
@@ -54,7 +54,7 @@ importers:
 
   examples/bidirectional-demo:
     dependencies:
-      '@genui/core':
+      '@genuikit/core':
         specifier: workspace:*
         version: link:../../packages/core
       zod:
@@ -70,7 +70,7 @@ importers:
 
   examples/streaming-demo:
     dependencies:
-      '@genui/core':
+      '@genuikit/core':
         specifier: workspace:*
         version: link:../../packages/core
       zod:
@@ -86,7 +86,7 @@ importers:
 
   packages/adapters:
     dependencies:
-      '@genui/core':
+      '@genuikit/core':
         specifier: workspace:*
         version: link:../core
     devDependencies:
@@ -140,7 +140,7 @@ importers:
 
   packages/react:
     dependencies:
-      '@genui/core':
+      '@genuikit/core':
         specifier: workspace:*
         version: link:../core
     devDependencies:

@@ -6,7 +6,7 @@
  *
  * @example
  * ```ts
- * import { createMuiRegistry } from '@genui/adapters/mui';
+ * import { createMuiRegistry } from '@genuikit/adapters/mui';
  * import { Button } from '@mui/material/Button';
  * import { Card } from './components/MuiCard';
  *

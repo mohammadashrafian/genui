@@ -50,21 +50,21 @@ describe('getAdapterChoices', () => {
 describe('generateRegistryTemplate', () => {
   it('generates a shadcn template with correct factory import', () => {
     const result = generateRegistryTemplate('shadcn');
-    expect(result).toContain("import { createShadcnRegistry } from '@genui/adapters/shadcn'");
+    expect(result).toContain("import { createShadcnRegistry } from '@genuikit/adapters/shadcn'");
     expect(result).toContain("from '@/components/ui/button'");
     expect(result).toContain('createShadcnRegistry({');
   });
 
   it('generates a tailwind template with correct factory import', () => {
     const result = generateRegistryTemplate('tailwind');
-    expect(result).toContain("import { createTailwindRegistry } from '@genui/adapters/tailwind'");
+    expect(result).toContain("import { createTailwindRegistry } from '@genuikit/adapters/tailwind'");
     expect(result).toContain("from './components/button'");
     expect(result).toContain('createTailwindRegistry({');
   });
 
   it('generates a MUI template with correct factory import', () => {
     const result = generateRegistryTemplate('mui');
-    expect(result).toContain("import { createMuiRegistry } from '@genui/adapters/mui'");
+    expect(result).toContain("import { createMuiRegistry } from '@genuikit/adapters/mui'");
     expect(result).toContain("from '@mui/material/Button'");
     expect(result).toContain('createMuiRegistry({');
   });
@@ -151,8 +151,8 @@ describe('getDependencies', () => {
   it('always includes core dependencies', () => {
     for (const adapter of getAdapterChoices()) {
       const deps = getDependencies(adapter);
-      expect(deps).toContain('@genui/core');
-      expect(deps).toContain('@genui/adapters');
+      expect(deps).toContain('@genuikit/core');
+      expect(deps).toContain('@genuikit/adapters');
       expect(deps).toContain('zod');
     }
   });
@@ -166,11 +166,11 @@ describe('getDependencies', () => {
 
   it('does not add extra packages for shadcn', () => {
     const deps = getDependencies('shadcn');
-    expect(deps).toEqual(['@genui/core', '@genui/adapters', 'zod']);
+    expect(deps).toEqual(['@genuikit/core', '@genuikit/adapters', 'zod']);
   });
 
   it('does not add extra packages for tailwind', () => {
     const deps = getDependencies('tailwind');
-    expect(deps).toEqual(['@genui/core', '@genui/adapters', 'zod']);
+    expect(deps).toEqual(['@genuikit/core', '@genuikit/adapters', 'zod']);
   });
 });

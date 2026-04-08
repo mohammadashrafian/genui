@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import type { ResolveError, LLMComponentOutput } from '@genui/core';
+import type { ResolveError, LLMComponentOutput } from '@genuikit/core';
 import { ErrorOverlay } from '../error-overlay.js';
 
 // ---------------------------------------------------------------------------

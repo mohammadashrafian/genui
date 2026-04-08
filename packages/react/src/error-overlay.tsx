@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import type { ResolveError, LLMComponentOutput, ValidationError } from '@genui/core';
+import type { ResolveError, LLMComponentOutput, ValidationError } from '@genuikit/core';
 
 // ---------------------------------------------------------------------------
 // Props

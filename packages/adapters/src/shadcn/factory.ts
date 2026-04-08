@@ -6,7 +6,7 @@
  *
  * @example
  * ```ts
- * import { createShadcnRegistry } from '@genui/adapters/shadcn';
+ * import { createShadcnRegistry } from '@genuikit/adapters/shadcn';
  * import { Button } from '@/components/ui/button';
  * import { Card } from '@/components/ui/card';
  *

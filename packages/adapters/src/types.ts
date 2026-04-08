@@ -3,7 +3,7 @@
  */
 
 import type { z } from 'zod';
-import type { ActionSchemaMap } from '@genui/core';
+import type { ActionSchemaMap } from '@genuikit/core';
 
 /**
  * Accepts any valid React component regardless of its specific prop types.

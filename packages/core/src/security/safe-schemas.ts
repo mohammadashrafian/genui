@@ -9,7 +9,7 @@
  *
  * @example
  * ```ts
- * import { safeString, safeUrl, safeCssClass } from '@genui/core';
+ * import { safeString, safeUrl, safeCssClass } from '@genuikit/core';
  *
  * const schema = z.object({
  *   title: safeString({ maxLength: 200 }),

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { renderHook } from '@testing-library/react';
 import { z } from 'zod';
-import { ComponentRegistry } from '@genui/core';
+import { ComponentRegistry } from '@genuikit/core';
 import { useGenerativeUI } from '../use-generative-ui.js';
 
 const buttonSchema = z.object({

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { createElement } from 'react';
-import type { ComponentRegistry, LLMComponentOutput, ResolveResult } from '@genui/core';
+import type { ComponentRegistry, LLMComponentOutput, ResolveResult } from '@genuikit/core';
 
 export interface GenerativeUIResult {
   /** The resolved result — either success with component/props, or error with correction prompt. */

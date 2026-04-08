@@ -32,4 +32,4 @@ export type {
   ToolCallResult,
   DispatchOptions,
   ActionSchemaMap,
-} from '@genui/core';
+} from '@genuikit/core';

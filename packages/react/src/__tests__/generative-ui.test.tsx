@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { z } from 'zod';
-import { ComponentRegistry } from '@genui/core';
+import { ComponentRegistry } from '@genuikit/core';
 import { GenerativeUI } from '../generative-ui.js';
 
 const buttonSchema = z.object({ label: z.string() });

@@ -6,9 +6,9 @@ import type {
   StreamEvent,
   StreamSourceConfig,
   RetryOptions,
-} from '@genui/core';
-import { StreamResolver } from '@genui/core';
-import type { AbbreviationMap } from '@genui/core';
+} from '@genuikit/core';
+import { StreamResolver } from '@genuikit/core';
+import type { AbbreviationMap } from '@genuikit/core';
 
 export interface StreamingUIState<P = Record<string, unknown>> {
   /** Current stream snapshot with phase, partial props, and progress. */
