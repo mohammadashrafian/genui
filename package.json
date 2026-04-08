@@ -6,11 +6,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mohammadashrafian/genui.git"
+    "url": "https://github.com/mohammadashrafian/genuikit.git"
   },
-  "homepage": "https://github.com/mohammadashrafian/genui#readme",
+  "homepage": "https://github.com/mohammadashrafian/genuikit#readme",
   "bugs": {
-    "url": "https://github.com/mohammadashrafian/genui/issues"
+    "url": "https://github.com/mohammadashrafian/genuikit/issues"
   },
   "packageManager": "pnpm@9.15.4",
   "scripts": {

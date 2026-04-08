@@ -1020,7 +1020,7 @@ genui/
 
 ```bash
 # Clone the repo
-git clone https://github.com/mohammadashrafian/genui.git
+git clone https://github.com/mohammadashrafian/genuikit.git
 cd genui
 
 # Install dependencies

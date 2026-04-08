@@ -39,12 +39,12 @@
   "author": "Mohammad Ashrafian (https://github.com/mohammadashrafian)",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mohammadashrafian/genui.git",
+    "url": "https://github.com/mohammadashrafian/genuikit.git",
     "directory": "packages/core"
   },
-  "homepage": "https://github.com/mohammadashrafian/genui#readme",
+  "homepage": "https://github.com/mohammadashrafian/genuikit#readme",
   "bugs": {
-    "url": "https://github.com/mohammadashrafian/genui/issues"
+    "url": "https://github.com/mohammadashrafian/genuikit/issues"
   },
   "engines": {
     "node": ">=18.0.0"
