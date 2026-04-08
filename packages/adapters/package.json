@@ -48,7 +48,7 @@
       }
     }
   },
-  "files": ["dist"],
+  "files": ["dist", "LICENSE"],
   "scripts": {
     "build": "tsup",
     "test": "vitest run",
@@ -76,5 +76,14 @@
     "url": "https://github.com/mohammadashrafian/genui.git",
     "directory": "packages/adapters"
   },
-  "homepage": "https://github.com/mohammadashrafian/genui#readme"
+  "homepage": "https://github.com/mohammadashrafian/genui#readme",
+  "bugs": {
+    "url": "https://github.com/mohammadashrafian/genui/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }
