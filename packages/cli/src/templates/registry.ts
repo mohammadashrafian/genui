@@ -58,7 +58,7 @@ function tailwindTemplate(): string {
 
 // Create your Tailwind CSS component implementations
 // Each component receives validated props from the LLM
-// See: https://github.com/mohammadashrafian/genui
+// See: https://github.com/mohammadashrafian/genuikit
 
 import { Button } from './components/button';
 import { Card } from './components/card';

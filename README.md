@@ -61,7 +61,7 @@ LLM Output → GenUI Registry → Zod Validation → Typed React Component
 - **Framework-Agnostic Core** — The validation, streaming, and action engine is pure TypeScript. React hooks are a separate package.
 - **Security Module** — XSS-safe string sanitization, URL scheme validation, CSS injection prevention, built into every schema.
 - **Pre-built Adapters** — Ready-to-use schemas for shadcn/ui, Tailwind CSS, and Material UI (10 components each).
-- **CLI Scaffolding** — `npx genui init` generates a registry file for your chosen adapter. Zero manual setup.
+- **CLI Scaffolding** — `npx @genuikit/cli init` generates a registry file for your chosen adapter. Zero manual setup.
 - **Dev Error Overlay** — Rich floating overlay showing validation errors, raw LLM output, and correction prompts during development. Tree-shakes to zero in production.
 - **Lightweight** — ~37KB core + ~14KB React + ~7KB per adapter. Zero runtime dependencies beyond Zod.
 
@@ -74,7 +74,7 @@ LLM Output → GenUI Registry → Zod Validation → Typed React Component
 The fastest way to get started:
 
 ```bash
-npx genui init
+npx @genuikit/cli init
 ```
 
 The CLI will ask you to:
@@ -1002,7 +1002,7 @@ genui/
 │   │       └── mui/           # Material UI adapter (10 components)
 │   └── cli/                   # @genuikit/cli — CLI scaffolding tool
 │       └── src/
-│           ├── index.ts       # CLI entry point (npx genui init)
+│           ├── index.ts       # CLI entry point (npx @genuikit/cli init)
 │           ├── commands/      # Command implementations
 │           └── templates/     # Registry template generators
 ├── examples/

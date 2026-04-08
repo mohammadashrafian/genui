@@ -4,7 +4,7 @@ const HELP_TEXT = `
   \x1b[1m@genuikit/cli\x1b[0m — Scaffold GenUI component registries
 
   \x1b[1mUsage:\x1b[0m
-    genui <command>
+    npx @genuikit/cli <command>
 
   \x1b[1mCommands:\x1b[0m
     init        Initialize a component registry for your project
@@ -38,7 +38,7 @@ async function main(): Promise<void> {
     return;
   }
 
-  console.error(`Unknown command: "${command}". Run \`genui --help\` for usage.`);
+  console.error(`Unknown command: "${command}". Run \`npx @genuikit/cli --help\` for usage.`);
   process.exitCode = 1;
 }
 
