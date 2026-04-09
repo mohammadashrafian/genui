@@ -5,6 +5,15 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
+    "genuikit-docs#build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**"],
+      "env": ["NEXT_PUBLIC_*"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
     "test": {
       "dependsOn": ["build"]
     },

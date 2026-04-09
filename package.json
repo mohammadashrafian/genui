@@ -19,6 +19,8 @@
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,json,md}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,json,md}\"",
+    "dev:docs": "turbo dev --filter=genuikit-docs",
+    "build:docs": "turbo build --filter=genuikit-docs",
     "clean": "turbo clean",
     "changeset": "changeset",
     "version-packages": "changeset version",
