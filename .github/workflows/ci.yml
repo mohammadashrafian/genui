@@ -36,11 +36,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build all packages
-        run: pnpm turbo build --filter='*'
+      - name: Build library packages
+        run: pnpm turbo build --filter='./packages/*'
 
       - name: Run tests
-        run: pnpm turbo test --filter='*'
+        run: pnpm turbo test --filter='./packages/*'
 
   typecheck:
     name: Type Check
@@ -63,7 +63,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build packages (required for cross-package types)
-        run: pnpm turbo build --filter='*'
+        run: pnpm turbo build --filter='./packages/*'
 
       - name: Type check core
         run: pnpm --filter @genuikit/core lint
