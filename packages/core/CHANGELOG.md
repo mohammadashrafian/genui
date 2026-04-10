@@ -1,5 +1,11 @@
 # @genuikit/core
 
+## 0.5.1
+
+### Patch Changes
+
+- [`c701f05`](https://github.com/mohammadashrafian/genuikit/commit/c701f05d46bb26e8b14a09fb745de70ae2ab7a60) Thanks [@mohammadashrafian](https://github.com/mohammadashrafian)! - Retrigger npm publish for v0.5.0 release
+
 ## 0.5.0
 
 ### Minor Changes

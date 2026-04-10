@@ -1,5 +1,14 @@
 # genuikit-docs
 
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [[`c701f05`](https://github.com/mohammadashrafian/genuikit/commit/c701f05d46bb26e8b14a09fb745de70ae2ab7a60)]:
+  - @genuikit/core@0.5.1
+  - @genuikit/adapters@0.5.1
+  - @genuikit/react@0.5.1
+
 ## 0.1.1
 
 ### Patch Changes
