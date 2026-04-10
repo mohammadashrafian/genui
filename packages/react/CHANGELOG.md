@@ -1,5 +1,22 @@
 # @genuikit/react
 
+## 0.6.0
+
+### Minor Changes
+
+- [`67da305`](https://github.com/mohammadashrafian/genuikit/commit/67da3052f954a857b675c596ab9ce2ab6898bc4f) Thanks [@mohammadashrafian](https://github.com/mohammadashrafian)! - Add subpath exports and lightweight client renderer for smaller bundles
+  - Add subpath exports (`/client`, `/stream`, `/wire-format`, `/action`, `/security`) to `@genuikit/core` so consumers can import only what they need
+  - Add subpath exports (`/client`, `/render`, `/streaming`, `/co-agent`, `/dev`) to `@genuikit/react`
+  - Add `ComponentRenderRegistry` for Zod-free client-side rendering of server-validated payloads
+  - Add `useValidatedUI` hook and `ValidatedUI` component for the lightweight client flow
+  - Mark all packages with `sideEffects: false` for better tree-shaking
+  - Externalize `zod` in core build to prevent inlining
+
+### Patch Changes
+
+- Updated dependencies [[`67da305`](https://github.com/mohammadashrafian/genuikit/commit/67da3052f954a857b675c596ab9ce2ab6898bc4f)]:
+  - @genuikit/core@0.6.0
+
 ## 0.5.3
 
 ### Patch Changes
