@@ -1,5 +1,12 @@
 # @genuikit/example-bidirectional-demo
 
+## 0.0.4
+
+### Patch Changes
+
+- Updated dependencies [[`39feb02`](https://github.com/mohammadashrafian/genuikit/commit/39feb02a6b9fe3dd8b21756faa0ecd620208216e)]:
+  - @genuikit/core@0.5.3
+
 ## 0.0.3
 
 ### Patch Changes

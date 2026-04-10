@@ -1,6 +1,6 @@
 {
   "name": "@genuikit/adapters",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "Pre-built UI adapters for shadcn/ui, Tailwind CSS, and Material UI with security-hardened schemas",
   "type": "module",
   "main": "./dist/index.cjs",

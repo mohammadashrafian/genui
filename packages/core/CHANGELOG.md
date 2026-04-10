@@ -1,5 +1,11 @@
 # @genuikit/core
 
+## 0.5.3
+
+### Patch Changes
+
+- [`39feb02`](https://github.com/mohammadashrafian/genuikit/commit/39feb02a6b9fe3dd8b21756faa0ecd620208216e) Thanks [@mohammadashrafian](https://github.com/mohammadashrafian)! - Fix release workflow: add registry-url for OIDC authentication
+
 ## 0.5.2
 
 ### Patch Changes
