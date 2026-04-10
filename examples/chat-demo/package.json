@@ -1,7 +1,7 @@
 {
   "name": "@genuikit/example-chat-demo",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "scripts": {
     "predev": "pnpm -C ../.. --filter @genuikit/core build && pnpm -C ../.. --filter @genuikit/react build",

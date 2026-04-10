@@ -1,6 +1,6 @@
 {
   "name": "@genuikit/react",
-  "version": "0.5.3",
+  "version": "0.6.0",
   "description": "React hooks for rendering LLM-driven generative UI components",
   "type": "module",
   "sideEffects": false,
