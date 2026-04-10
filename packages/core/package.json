@@ -1,6 +1,6 @@
 {
   "name": "@genuikit/core",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Type-safe component registry, streaming, bidirectional sync, and security for LLM-driven UI",
   "type": "module",
   "main": "./dist/index.cjs",
