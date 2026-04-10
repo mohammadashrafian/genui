@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { safeString } from '@genuikit/core';
+import { safeString } from '@genuikit/core/security';
 
 export const demoProviderSchema = z.enum(['openai', 'anthropic']);
 

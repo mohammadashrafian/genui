@@ -1,14 +1,14 @@
 import { useEffect, useMemo, useRef, useState, useTransition } from 'react';
-import { useGenerativeUI } from '@genuikit/react';
+import type { ValidatedComponentOutput } from '@genuikit/core/client';
+import { useValidatedUI } from '@genuikit/react/client';
 import type {
   ChatHistoryEntry,
   ChatResponsePayload,
-  DemoComponentOutput,
   DemoProvider,
   ValidationRetryTrace,
 } from './lib/contracts.js';
 import { fetchProviders, sendChatRequest } from './lib/api.js';
-import { demoRegistry } from './lib/registry.js';
+import { demoRenderRegistry } from './lib/client-registry.js';
 
 interface ChatMessage extends ChatHistoryEntry {
   readonly id: string;
@@ -46,10 +46,12 @@ const initialMessages: ChatMessage[] = [
           {
             label: 'Model comparison',
             description: 'Structured comparison table.',
+            emphasis: 'secondary',
           },
           {
             label: 'Sprint metrics',
             description: 'Headline metric board.',
+            emphasis: 'secondary',
           },
         ],
       },
@@ -191,8 +193,8 @@ export function App() {
           <span className="eyebrow">GenUI workspace example</span>
           <h1>Live chat demo</h1>
           <p>
-            A real chat UI with provider switching, JSON validation, correction prompts, retries,
-            and final React rendering through GenUI.
+            A real chat UI with provider switching, server-side GenUI validation, correction
+            prompts, retries, and a lightweight client renderer.
           </p>
         </div>
 
@@ -340,8 +342,8 @@ export function App() {
           />
           <div className="composer-actions">
             <p className="muted">
-              The demo sends your full chat history, validates returned props, and retries with a
-              correction prompt when needed.
+              The demo sends your full chat history, validates returned props on the server, and
+              ships only trusted component payloads to the lightweight client renderer.
             </p>
             <button
               type="submit"
@@ -377,8 +379,8 @@ function ChatBubble({ message }: { message: ChatMessage }) {
   );
 }
 
-function RenderedGenUIComponent({ output }: { output: DemoComponentOutput }) {
-  const { element, ok, correctionPrompt } = useGenerativeUI(demoRegistry, output);
+function RenderedGenUIComponent({ output }: { output: ValidatedComponentOutput }) {
+  const { element, ok, missingComponent } = useValidatedUI(demoRenderRegistry, output);
 
   if (ok) {
     return <div className="rendered-ui">{element}</div>;
@@ -386,8 +388,11 @@ function RenderedGenUIComponent({ output }: { output: DemoComponentOutput }) {
 
   return (
     <div className="rendered-ui rendered-ui-error">
-      <strong>Client-side validation failed</strong>
-      <pre>{correctionPrompt}</pre>
+      <strong>Client registry mismatch</strong>
+      <pre>
+        The server returned "{missingComponent ?? output.type}", but the browser is missing that
+        render component.
+      </pre>
     </div>
   );
 }

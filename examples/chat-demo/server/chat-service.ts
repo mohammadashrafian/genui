@@ -76,15 +76,12 @@ export async function generateAssistantReply(
       };
     }
 
-    const validation = demoRegistry.tryResolve(envelope.component);
+    const validation = demoRegistry.tryValidateOutput(envelope.component);
     if (validation?.ok) {
       return {
         reply: {
           message: envelope.message,
-          component: {
-            type: validation.name,
-            props: validation.props as Record<string, unknown>,
-          },
+          component: validation.output,
         },
         provider,
         model: generation.model,

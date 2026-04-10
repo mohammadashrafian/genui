@@ -191,6 +191,65 @@ describe('ComponentRegistry', () => {
     });
   });
 
+  describe('validateOutput', () => {
+    it('should return a trusted output payload with parsed props', () => {
+      const registry = new ComponentRegistry();
+      registry.register('Button', buttonSchema, StubButton);
+
+      const result = registry.validateOutput({
+        type: 'Button',
+        props: { label: 'Click me' },
+      });
+
+      expect(result.ok).toBe(true);
+      if (result.ok) {
+        expect(result.output).toEqual({
+          type: 'Button',
+          props: { label: 'Click me', disabled: false },
+        });
+      }
+    });
+
+    it('should return validation errors for invalid props', () => {
+      const registry = new ComponentRegistry();
+      registry.register('Button', buttonSchema, StubButton);
+
+      const result = registry.validateOutput({
+        type: 'Button',
+        props: { label: 123 },
+      });
+
+      expect(result.ok).toBe(false);
+      if (!result.ok) {
+        expect(result.correctionPrompt).toContain('Button');
+      }
+    });
+  });
+
+  describe('createRenderRegistry', () => {
+    it('should create a lightweight registry that renders validated output', () => {
+      const registry = new ComponentRegistry();
+      registry.register('Button', buttonSchema, StubButton);
+
+      const validated = registry.validateOutput({
+        type: 'Button',
+        props: { label: 'Server validated' },
+      });
+
+      expect(validated.ok).toBe(true);
+      if (!validated.ok) {
+        return;
+      }
+
+      const renderRegistry = registry.createRenderRegistry();
+      const rendered = renderRegistry.tryResolve(validated.output);
+
+      expect(rendered?.ok).toBe(true);
+      expect(rendered?.props).toEqual({ label: 'Server validated', disabled: false });
+      expect(rendered?.component).toBe(StubButton);
+    });
+  });
+
   describe('toToolDefinition', () => {
     it('should generate tool definitions for all registered components', () => {
       const registry = new ComponentRegistry();

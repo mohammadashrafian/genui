@@ -11,7 +11,7 @@
  * a component the user forgot to provide.
  */
 
-import { ActionRegistry } from '@genuikit/core';
+import { ActionRegistry } from '@genuikit/core/action';
 import type { AnyComponent, ComponentDefinition, AdapterConfig } from '../types.js';
 
 /**

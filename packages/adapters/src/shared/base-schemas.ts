@@ -4,7 +4,7 @@
  */
 
 import { z } from 'zod';
-import { safeString, safeUrl, safeCssClass } from '@genuikit/core';
+import { safeString, safeUrl, safeCssClass } from '@genuikit/core/security';
 
 // ─── Reusable prop schemas ────────────────────────────────────────
 

@@ -12,8 +12,8 @@ import {
   ActionRegistry,
   ActionQueue,
   ActionSerializer,
-} from '@genuikit/core';
-import type { Action, ToolCallResult } from '@genuikit/core';
+} from '@genuikit/core/action';
+import type { Action, ToolCallResult } from '@genuikit/core/action';
 
 // ─── Schemas ───────────────────────────────────────────────────────────
 

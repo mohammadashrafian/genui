@@ -3,6 +3,7 @@
   "version": "0.5.3",
   "description": "React hooks for rendering LLM-driven generative UI components",
   "type": "module",
+  "sideEffects": false,
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -16,6 +17,75 @@
         "types": "./dist/index.d.cts",
         "default": "./dist/index.cjs"
       }
+    },
+    "./client": {
+      "import": {
+        "types": "./dist/client.d.ts",
+        "default": "./dist/client.js"
+      },
+      "require": {
+        "types": "./dist/client.d.cts",
+        "default": "./dist/client.cjs"
+      }
+    },
+    "./render": {
+      "import": {
+        "types": "./dist/render.d.ts",
+        "default": "./dist/render.js"
+      },
+      "require": {
+        "types": "./dist/render.d.cts",
+        "default": "./dist/render.cjs"
+      }
+    },
+    "./streaming": {
+      "import": {
+        "types": "./dist/streaming.d.ts",
+        "default": "./dist/streaming.js"
+      },
+      "require": {
+        "types": "./dist/streaming.d.cts",
+        "default": "./dist/streaming.cjs"
+      }
+    },
+    "./co-agent": {
+      "import": {
+        "types": "./dist/co-agent.d.ts",
+        "default": "./dist/co-agent.js"
+      },
+      "require": {
+        "types": "./dist/co-agent.d.cts",
+        "default": "./dist/co-agent.cjs"
+      }
+    },
+    "./dev": {
+      "import": {
+        "types": "./dist/dev.d.ts",
+        "default": "./dist/dev.js"
+      },
+      "require": {
+        "types": "./dist/dev.d.cts",
+        "default": "./dist/dev.cjs"
+      }
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "client": [
+        "dist/client.d.ts"
+      ],
+      "render": [
+        "dist/render.d.ts"
+      ],
+      "streaming": [
+        "dist/streaming.d.ts"
+      ],
+      "co-agent": [
+        "dist/co-agent.d.ts"
+      ],
+      "dev": [
+        "dist/dev.d.ts"
+      ]
     }
   },
   "files": [

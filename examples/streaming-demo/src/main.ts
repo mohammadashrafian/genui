@@ -10,16 +10,18 @@
 
 import { z } from 'zod';
 import {
-  ComponentRegistry,
   StreamParser,
   StreamResolver,
+} from '@genuikit/core/stream';
+import {
   encode,
   decode,
   encodeBatch,
   estimateSavings,
   generateWireFormatPrompt,
-} from '@genuikit/core';
-import type { StreamEvent } from '@genuikit/core';
+} from '@genuikit/core/wire-format';
+import { ComponentRegistry } from '@genuikit/core';
+import type { StreamEvent } from '@genuikit/core/stream';
 
 // ─── Setup ──────────────────────────────────────────────────
 

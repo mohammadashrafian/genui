@@ -4,9 +4,17 @@ A real end-to-end chat app for GenUI that:
 
 - calls a live LLM provider from a local API server
 - asks the model for JSON plus a UI component
-- validates the component with `@genuikit/core`
+- validates the component with `@genuikit/core` on the server
 - retries with GenUI correction prompts if validation fails
-- renders the final component in a React chat UI with `@genuikit/react`
+- renders the final component in a React chat UI with the lightweight `@genuikit/react/client` mode
+
+## Architecture
+
+The demo intentionally uses the new server-validated flow:
+
+- server: `ComponentRegistry` validates and normalizes model output
+- network: only the trusted `{ type, props }` payload is sent to the browser
+- client: `ComponentRenderRegistry` and `useValidatedUI` render without shipping schemas or Zod
 
 ## Providers
 

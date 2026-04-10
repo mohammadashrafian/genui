@@ -5,10 +5,12 @@ import type {
   RegistryEntry,
   RegistryOptions,
   ResolveResult,
+  ValidatedOutputResult,
   ValidationError,
 } from './types.js';
 import { ComponentNotFoundError, DuplicateRegistrationError } from './errors.js';
 import { generateCorrectionPrompt } from './correction.js';
+import { ComponentRenderRegistry } from './render-registry.js';
 
 /**
  * ComponentRegistry is the central piece of GenUI. It maps component names
@@ -107,6 +109,55 @@ export class ComponentRegistry {
       return null;
     }
     return this.resolve(output);
+  }
+
+  /**
+   * Validates LLM output and returns a serializable payload for a lightweight
+   * client renderer. The returned output is safe to send over the network.
+   */
+  validateOutput(output: LLMComponentOutput): ValidatedOutputResult {
+    const result = this.resolve(output);
+
+    if (!result.ok) {
+      return result;
+    }
+
+    return {
+      ok: true,
+      name: result.name,
+      props: result.props,
+      output: {
+        type: result.name,
+        props: result.props as Record<string, unknown>,
+      },
+    };
+  }
+
+  /**
+   * Validates LLM output, returning null when the component is not registered.
+   */
+  tryValidateOutput(output: LLMComponentOutput): ValidatedOutputResult | null {
+    if (!this.entries.has(output.type)) {
+      return null;
+    }
+
+    return this.validateOutput(output);
+  }
+
+  /**
+   * Creates a lightweight registry containing only component implementations.
+   * Use this on the client when props have already been validated on the server.
+   */
+  createRenderRegistry(): ComponentRenderRegistry {
+    const registry = new ComponentRenderRegistry({
+      allowOverwrite: this.options.allowOverwrite,
+    });
+
+    for (const entry of this.entries.values()) {
+      registry.register(entry.name, entry.component);
+    }
+
+    return registry;
   }
 
   /** Checks if a component name is registered. */

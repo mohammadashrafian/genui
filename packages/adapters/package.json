@@ -3,6 +3,7 @@
   "version": "0.5.3",
   "description": "Pre-built UI adapters for shadcn/ui, Tailwind CSS, and Material UI with security-hardened schemas",
   "type": "module",
+  "sideEffects": false,
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",

@@ -1,14 +1,14 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { createElement } from 'react';
 import type {
-  ComponentRegistry,
   StreamSnapshot,
   StreamEvent,
   StreamSourceConfig,
   RetryOptions,
-} from '@genuikit/core';
-import { StreamResolver } from '@genuikit/core';
-import type { AbbreviationMap } from '@genuikit/core';
+} from '@genuikit/core/stream';
+import { StreamResolver } from '@genuikit/core/stream';
+import type { AbbreviationMap } from '@genuikit/core/stream';
+import type { ComponentRegistry } from '@genuikit/core';
 
 export interface StreamingUIState<P = Record<string, unknown>> {
   /** Current stream snapshot with phase, partial props, and progress. */

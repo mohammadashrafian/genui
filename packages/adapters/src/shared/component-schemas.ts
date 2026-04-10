@@ -7,7 +7,7 @@
  */
 
 import { z } from 'zod';
-import { safeString, safeUrl } from '@genuikit/core';
+import { safeString, safeUrl } from '@genuikit/core/security';
 import { ariaLabelSchema, childrenSchema, classNameSchema } from './base-schemas.js';
 
 const titleSchema = safeString({ maxLength: 500 });
