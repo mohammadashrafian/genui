@@ -31,7 +31,6 @@ jobs:
         with:
           node-version: 22
           cache: 'pnpm'
-          registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -47,9 +46,18 @@ jobs:
         uses: changesets/action@v1
         with:
           version: pnpm changeset version
-          publish: pnpm changeset publish
+          publish: echo "skip-changesets-publish"
           title: 'chore: version packages'
           commit: 'chore: version packages'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_CONFIG_PROVENANCE: true
+
+      - name: Publish to npm with OIDC provenance
+        if: steps.changesets.outputs.hasChangesets == 'false'
+        run: |
+          for pkg in core react adapters cli; do
+            echo "Publishing @genuikit/$pkg..."
+            cd packages/$pkg
+            npm publish --provenance --access public 2>&1 || echo "Skipped @genuikit/$pkg (already published or error)"
+            cd ../..
+          done
