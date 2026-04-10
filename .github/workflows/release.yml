@@ -8,9 +8,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
 
 permissions:
-  contents: write       # Push version commits and tags
-  pull-requests: write  # Create "Version Packages" PR
-  id-token: write       # OIDC token for npm Trusted Publishing
+  contents: write
+  pull-requests: write
+  id-token: write
 
 jobs:
   release:
@@ -33,6 +33,14 @@ jobs:
           cache: 'pnpm'
           registry-url: 'https://registry.npmjs.org'
 
+      - name: Upgrade npm
+        run: npm i -g npm@11.12.1
+
+      - name: Show Node and npm versions
+        run: |
+          node -v
+          npm -v
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -53,12 +61,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish to npm with OIDC provenance
+      - name: Debug core package.json
+        if: steps.changesets.outputs.hasChangesets == 'false'
+        run: cat packages/core/package.json
+
+      - name: Publish core only
         if: steps.changesets.outputs.hasChangesets == 'false'
         run: |
-          for pkg in core react adapters cli; do
-            echo "=== Publishing @genuikit/$pkg ==="
-            cd packages/$pkg
-            npm publish --provenance --access public
-            cd ../..
-          done
+          cd packages/core
+          npm publish --access public --provenance
