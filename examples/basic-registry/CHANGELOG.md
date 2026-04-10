@@ -1,5 +1,13 @@
 # @genuikit/example-basic-registry
 
+## 0.0.3
+
+### Patch Changes
+
+- Updated dependencies [[`f0b4d33`](https://github.com/mohammadashrafian/genuikit/commit/f0b4d33a5d43716c9f436c1527ad0141cc2cc117)]:
+  - @genuikit/core@0.5.2
+  - @genuikit/react@0.5.2
+
 ## 0.0.2
 
 ### Patch Changes

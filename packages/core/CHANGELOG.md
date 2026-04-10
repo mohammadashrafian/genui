@@ -1,5 +1,11 @@
 # @genuikit/core
 
+## 0.5.2
+
+### Patch Changes
+
+- [`f0b4d33`](https://github.com/mohammadashrafian/genuikit/commit/f0b4d33a5d43716c9f436c1527ad0141cc2cc117) Thanks [@mohammadashrafian](https://github.com/mohammadashrafian)! - Fix release workflow to use npm publish with OIDC provenance directly
+
 ## 0.5.1
 
 ### Patch Changes

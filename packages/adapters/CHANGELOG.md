@@ -1,5 +1,12 @@
 # @genuikit/adapters
 
+## 0.5.2
+
+### Patch Changes
+
+- Updated dependencies [[`f0b4d33`](https://github.com/mohammadashrafian/genuikit/commit/f0b4d33a5d43716c9f436c1527ad0141cc2cc117)]:
+  - @genuikit/core@0.5.2
+
 ## 0.5.1
 
 ### Patch Changes
