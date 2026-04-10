@@ -18,6 +18,11 @@ next-env.d.ts
 # Claude
 .claude/
 
+# Environment files with secrets
+.env
+.env.local
+.env.*.local
+
 # OS
 .DS_Store
 Thumbs.db

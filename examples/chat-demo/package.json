@@ -1,0 +1,33 @@
+{
+  "name": "@genuikit/example-chat-demo",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "predev": "pnpm -C ../.. --filter @genuikit/core build && pnpm -C ../.. --filter @genuikit/react build",
+    "dev": "concurrently -k -n api,web -c cyan,magenta \"pnpm dev:server\" \"pnpm dev:client\"",
+    "dev:client": "vite",
+    "dev:server": "tsx watch server/main.ts",
+    "prebuild": "pnpm -C ../.. --filter @genuikit/core build && pnpm -C ../.. --filter @genuikit/react build",
+    "build": "vite build",
+    "preview": "vite preview",
+    "serve": "tsx server/main.ts"
+  },
+  "dependencies": {
+    "@genuikit/core": "workspace:*",
+    "@genuikit/react": "workspace:*",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "concurrently": "^9.1.2",
+    "tsx": "^4.0.0",
+    "typescript": "^5.5.0",
+    "vite": "^5.4.11"
+  }
+}
