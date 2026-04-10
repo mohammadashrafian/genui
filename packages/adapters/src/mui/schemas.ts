@@ -12,7 +12,9 @@ import { childrenSchema, classNameSchema, ariaLabelSchema } from '../shared/base
 export const buttonSchema = z.object({
   children: childrenSchema,
   variant: z.enum(['text', 'contained', 'outlined']).default('contained'),
-  color: z.enum(['primary', 'secondary', 'success', 'error', 'info', 'warning', 'inherit']).default('primary'),
+  color: z
+    .enum(['primary', 'secondary', 'success', 'error', 'info', 'warning', 'inherit'])
+    .default('primary'),
   size: z.enum(['small', 'medium', 'large']).default('medium'),
   disabled: z.boolean().default(false),
   fullWidth: z.boolean().default(false),
@@ -26,7 +28,10 @@ export const cardSchema = z.object({
   content: safeString({ maxLength: 50_000 }),
   mediaUrl: safeUrl().optional(),
   mediaAlt: safeString({ maxLength: 256 }).optional(),
-  actions: z.array(safeString({ maxLength: 200 })).max(10).optional(),
+  actions: z
+    .array(safeString({ maxLength: 200 }))
+    .max(10)
+    .optional(),
   elevation: z.number().int().min(0).max(24).default(1),
   className: classNameSchema.optional(),
 });
@@ -43,7 +48,9 @@ export const alertSchema = z.object({
 export const chipSchema = z.object({
   label: safeString({ maxLength: 500 }),
   variant: z.enum(['filled', 'outlined']).default('filled'),
-  color: z.enum(['default', 'primary', 'secondary', 'error', 'info', 'success', 'warning']).default('default'),
+  color: z
+    .enum(['default', 'primary', 'secondary', 'error', 'info', 'success', 'warning'])
+    .default('default'),
   size: z.enum(['small', 'medium']).default('medium'),
   clickable: z.boolean().default(false),
   deletable: z.boolean().default(false),
@@ -71,11 +78,15 @@ export const selectSchema = z.object({
   label: safeString({ maxLength: 256 }).optional(),
   variant: z.enum(['outlined', 'filled', 'standard']).default('outlined'),
   defaultValue: safeString({ maxLength: 256 }).optional(),
-  options: z.array(z.object({
-    value: safeString({ maxLength: 256 }),
-    label: safeString({ maxLength: 500 }),
-    disabled: z.boolean().optional(),
-  })).max(1000),
+  options: z
+    .array(
+      z.object({
+        value: safeString({ maxLength: 256 }),
+        label: safeString({ maxLength: 500 }),
+        disabled: z.boolean().optional(),
+      }),
+    )
+    .max(1000),
   disabled: z.boolean().default(false),
   fullWidth: z.boolean().default(false),
   className: classNameSchema.optional(),
@@ -93,13 +104,18 @@ export const dialogSchema = z.object({
 
 export const tabsSchema = z.object({
   value: safeString({ maxLength: 256 }).optional(),
-  tabs: z.array(z.object({
-    value: safeString({ maxLength: 256 }),
-    label: safeString({ maxLength: 500 }),
-    content: safeString({ maxLength: 50_000 }),
-    disabled: z.boolean().optional(),
-    icon: safeString({ maxLength: 64 }).optional(),
-  })).min(1).max(50),
+  tabs: z
+    .array(
+      z.object({
+        value: safeString({ maxLength: 256 }),
+        label: safeString({ maxLength: 500 }),
+        content: safeString({ maxLength: 50_000 }),
+        disabled: z.boolean().optional(),
+        icon: safeString({ maxLength: 64 }).optional(),
+      }),
+    )
+    .min(1)
+    .max(50),
   variant: z.enum(['standard', 'scrollable', 'fullWidth']).default('standard'),
   centered: z.boolean().default(false),
   className: classNameSchema.optional(),
@@ -121,3 +137,26 @@ export const avatarSchema = z.object({
   variant: z.enum(['circular', 'rounded', 'square']).default('circular'),
   className: classNameSchema.optional(),
 });
+
+export {
+  accordionSchema,
+  breadcrumbsSchema,
+  paginationSchema,
+  progressBarSchema,
+  skeletonSchema,
+  tooltipSchema,
+  textareaSchema,
+  checkboxSchema,
+  radioGroupSchema,
+  switchSchema,
+  sliderSchema,
+  formSchema,
+  stepperSchema,
+  statCardSchema,
+  timelineSchema,
+  barChartSchema,
+  lineChartSchema,
+  pieChartSchema,
+  areaChartSchema,
+  mapSchema,
+} from '../shared/component-schemas.js';

@@ -57,7 +57,9 @@ describe('generateRegistryTemplate', () => {
 
   it('generates a tailwind template with correct factory import', () => {
     const result = generateRegistryTemplate('tailwind');
-    expect(result).toContain("import { createTailwindRegistry } from '@genuikit/adapters/tailwind'");
+    expect(result).toContain(
+      "import { createTailwindRegistry } from '@genuikit/adapters/tailwind'",
+    );
     expect(result).toContain("from './components/button'");
     expect(result).toContain('createTailwindRegistry({');
   });
@@ -69,7 +71,7 @@ describe('generateRegistryTemplate', () => {
     expect(result).toContain('createMuiRegistry({');
   });
 
-  it('includes all 10 standard components in every template', () => {
+  it('includes all 30 standard components in every template', () => {
     const expectedComponents: Record<AdapterChoice, string[]> = {
       shadcn: [
         'Button',
@@ -82,6 +84,26 @@ describe('generateRegistryTemplate', () => {
         'Tabs',
         'Table',
         'Avatar',
+        'Accordion',
+        'Breadcrumbs',
+        'Pagination',
+        'ProgressBar',
+        'Skeleton',
+        'Tooltip',
+        'Textarea',
+        'Checkbox',
+        'RadioGroup',
+        'Switch',
+        'Slider',
+        'Form',
+        'Stepper',
+        'StatCard',
+        'Timeline',
+        'BarChart',
+        'LineChart',
+        'PieChart',
+        'AreaChart',
+        'Map',
       ],
       tailwind: [
         'Button',
@@ -94,6 +116,26 @@ describe('generateRegistryTemplate', () => {
         'Tabs',
         'Table',
         'Avatar',
+        'Accordion',
+        'Breadcrumbs',
+        'Pagination',
+        'ProgressBar',
+        'Skeleton',
+        'Tooltip',
+        'Textarea',
+        'Checkbox',
+        'RadioGroup',
+        'Switch',
+        'Slider',
+        'Form',
+        'Stepper',
+        'StatCard',
+        'Timeline',
+        'BarChart',
+        'LineChart',
+        'PieChart',
+        'AreaChart',
+        'Map',
       ],
       mui: [
         'Button',
@@ -106,6 +148,26 @@ describe('generateRegistryTemplate', () => {
         'Tabs',
         'Table',
         'Avatar',
+        'Accordion',
+        'Breadcrumbs',
+        'Pagination',
+        'ProgressBar',
+        'Skeleton',
+        'Tooltip',
+        'Textarea',
+        'Checkbox',
+        'RadioGroup',
+        'Switch',
+        'Slider',
+        'Form',
+        'Stepper',
+        'StatCard',
+        'Timeline',
+        'BarChart',
+        'LineChart',
+        'PieChart',
+        'AreaChart',
+        'Map',
       ],
     };
 

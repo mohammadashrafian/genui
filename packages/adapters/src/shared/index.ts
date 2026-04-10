@@ -6,6 +6,11 @@ export {
   ariaLabelSchema,
   clickActionSchema,
   changeActionSchema,
+  numberChangeActionSchema,
+  booleanChangeActionSchema,
   submitActionSchema,
   openChangeActionSchema,
+  pageChangeActionSchema,
+  stepChangeActionSchema,
+  markerSelectActionSchema,
 } from './base-schemas.js';

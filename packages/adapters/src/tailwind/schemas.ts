@@ -37,7 +37,9 @@ export const alertSchema = z.object({
 
 export const badgeSchema = z.object({
   children: childrenSchema,
-  color: z.enum(['gray', 'red', 'yellow', 'green', 'blue', 'indigo', 'purple', 'pink']).default('gray'),
+  color: z
+    .enum(['gray', 'red', 'yellow', 'green', 'blue', 'indigo', 'purple', 'pink'])
+    .default('gray'),
   size: z.enum(['sm', 'md', 'lg']).default('md'),
   className: classNameSchema.optional(),
 });
@@ -59,11 +61,15 @@ export const selectSchema = z.object({
   label: safeString({ maxLength: 256 }).optional(),
   placeholder: safeString({ maxLength: 256 }).optional(),
   defaultValue: safeString({ maxLength: 256 }).optional(),
-  options: z.array(z.object({
-    value: safeString({ maxLength: 256 }),
-    label: safeString({ maxLength: 500 }),
-    disabled: z.boolean().optional(),
-  })).max(1000),
+  options: z
+    .array(
+      z.object({
+        value: safeString({ maxLength: 256 }),
+        label: safeString({ maxLength: 500 }),
+        disabled: z.boolean().optional(),
+      }),
+    )
+    .max(1000),
   disabled: z.boolean().default(false),
   className: classNameSchema.optional(),
   'aria-label': ariaLabelSchema.optional(),
@@ -79,12 +85,17 @@ export const dialogSchema = z.object({
 
 export const tabsSchema = z.object({
   defaultValue: safeString({ maxLength: 256 }).optional(),
-  tabs: z.array(z.object({
-    value: safeString({ maxLength: 256 }),
-    label: safeString({ maxLength: 500 }),
-    content: safeString({ maxLength: 50_000 }),
-    disabled: z.boolean().optional(),
-  })).min(1).max(50),
+  tabs: z
+    .array(
+      z.object({
+        value: safeString({ maxLength: 256 }),
+        label: safeString({ maxLength: 500 }),
+        content: safeString({ maxLength: 50_000 }),
+        disabled: z.boolean().optional(),
+      }),
+    )
+    .min(1)
+    .max(50),
   className: classNameSchema.optional(),
 });
 
@@ -104,3 +115,26 @@ export const avatarSchema = z.object({
   size: z.enum(['xs', 'sm', 'md', 'lg', 'xl']).default('md'),
   className: classNameSchema.optional(),
 });
+
+export {
+  accordionSchema,
+  breadcrumbsSchema,
+  paginationSchema,
+  progressBarSchema,
+  skeletonSchema,
+  tooltipSchema,
+  textareaSchema,
+  checkboxSchema,
+  radioGroupSchema,
+  switchSchema,
+  sliderSchema,
+  formSchema,
+  stepperSchema,
+  statCardSchema,
+  timelineSchema,
+  barChartSchema,
+  lineChartSchema,
+  pieChartSchema,
+  areaChartSchema,
+  mapSchema,
+} from '../shared/component-schemas.js';

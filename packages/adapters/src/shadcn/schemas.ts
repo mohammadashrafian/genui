@@ -12,7 +12,9 @@ import { childrenSchema, classNameSchema, ariaLabelSchema } from '../shared/base
 
 export const buttonSchema = z.object({
   children: childrenSchema,
-  variant: z.enum(['default', 'destructive', 'outline', 'secondary', 'ghost', 'link']).default('default'),
+  variant: z
+    .enum(['default', 'destructive', 'outline', 'secondary', 'ghost', 'link'])
+    .default('default'),
   size: z.enum(['default', 'sm', 'lg', 'icon']).default('default'),
   disabled: z.boolean().default(false),
   className: classNameSchema.optional(),
@@ -52,11 +54,15 @@ export const inputSchema = z.object({
 export const selectSchema = z.object({
   placeholder: safeString({ maxLength: 256 }).optional(),
   defaultValue: safeString({ maxLength: 256 }).optional(),
-  options: z.array(z.object({
-    value: safeString({ maxLength: 256 }),
-    label: safeString({ maxLength: 500 }),
-    disabled: z.boolean().optional(),
-  })).max(1000),
+  options: z
+    .array(
+      z.object({
+        value: safeString({ maxLength: 256 }),
+        label: safeString({ maxLength: 500 }),
+        disabled: z.boolean().optional(),
+      }),
+    )
+    .max(1000),
   disabled: z.boolean().default(false),
   className: classNameSchema.optional(),
   'aria-label': ariaLabelSchema.optional(),
@@ -72,12 +78,17 @@ export const dialogSchema = z.object({
 
 export const tabsSchema = z.object({
   defaultValue: safeString({ maxLength: 256 }).optional(),
-  tabs: z.array(z.object({
-    value: safeString({ maxLength: 256 }),
-    label: safeString({ maxLength: 500 }),
-    content: safeString({ maxLength: 50_000 }),
-    disabled: z.boolean().optional(),
-  })).min(1).max(50),
+  tabs: z
+    .array(
+      z.object({
+        value: safeString({ maxLength: 256 }),
+        label: safeString({ maxLength: 500 }),
+        content: safeString({ maxLength: 50_000 }),
+        disabled: z.boolean().optional(),
+      }),
+    )
+    .min(1)
+    .max(50),
   className: classNameSchema.optional(),
 });
 
@@ -94,3 +105,26 @@ export const avatarSchema = z.object({
   fallback: safeString({ maxLength: 10 }).optional(),
   className: classNameSchema.optional(),
 });
+
+export {
+  accordionSchema,
+  breadcrumbsSchema,
+  paginationSchema,
+  progressBarSchema,
+  skeletonSchema,
+  tooltipSchema,
+  textareaSchema,
+  checkboxSchema,
+  radioGroupSchema,
+  switchSchema,
+  sliderSchema,
+  formSchema,
+  stepperSchema,
+  statCardSchema,
+  timelineSchema,
+  barChartSchema,
+  lineChartSchema,
+  pieChartSchema,
+  areaChartSchema,
+  mapSchema,
+} from '../shared/component-schemas.js';

@@ -1,16 +1,15 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/GenUI-v0.4.0-blue?style=for-the-badge" alt="GenUI Version" />
+  <img src="https://img.shields.io/badge/GenUIKit-v0.4.0-blue?style=for-the-badge" alt="GenUIKit Version" />
   <img src="https://img.shields.io/badge/TypeScript-Strict-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript Strict" />
   <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="MIT License" />
-  <img src="https://img.shields.io/badge/Tests-289%20Passing-brightgreen?style=for-the-badge" alt="Tests Passing" />
+  <img src="https://img.shields.io/badge/Tests-299%20Passing-brightgreen?style=for-the-badge" alt="Tests Passing" />
 </p>
 
-<h1 align="center">GenUI</h1>
+<h1 align="center">GenUIKit</h1>
 
 <p align="center">
   <strong>A type-safe bridge between LLM outputs and your React components.</strong>
 </p>
-
 
 <p align="center">
   Register your components with Zod schemas. Feed in raw LLM JSON.<br/>
@@ -27,14 +26,14 @@ LLMs generate JSON. Your UI needs components. The gap between them is **unsafe, 
 LLM Output (unpredictable JSON) → ??? → Your React Components (need typed props)
 ```
 
-Without GenUI, you write brittle `if/else` chains, skip validation, and pray the AI doesn't hallucinate invalid props. When it does — and it will — your app crashes with cryptic errors.
+Without GenUIKit, you write brittle `if/else` chains, skip validation, and pray the AI doesn't hallucinate invalid props. When it does — and it will — your app crashes with cryptic errors.
 
 ## The Solution
 
-GenUI is a **tiny, zero-config library** that sits between your LLM and your components:
+GenUIKit is a **tiny, zero-config library** that sits between your LLM and your components:
 
 ```
-LLM Output → GenUI Registry → Zod Validation → Typed React Component
+LLM Output → GenUIKit Registry → Zod Validation → Typed React Component
                                     ↓ (on failure)
                               Correction Prompt → Back to LLM → Retry
 ```
@@ -47,7 +46,7 @@ LLM Output → GenUI Registry → Zod Validation → Typed React Component
 
 - **Type-Safe Registry** — Register components with Zod schemas. TypeScript infers prop types automatically.
 - **Runtime Validation** — Every LLM output is validated before it touches the DOM. No unsafe data gets through.
-- **Auto-Correction** — When validation fails, GenUI generates a structured prompt telling the LLM exactly what to fix.
+- **Auto-Correction** — When validation fails, GenUIKit generates a structured prompt telling the LLM exactly what to fix.
 - **Streaming Rendering** — Progressive UI rendering as LLM tokens arrive. See components build up in real time.
 - **Partial JSON Parsing** — Heals incomplete JSON streams, extracting valid partial objects at each step.
 - **Wire Format** — Token-efficient compact encoding with abbreviation maps. Saves 20-40% on output tokens.
@@ -60,7 +59,7 @@ LLM Output → GenUI Registry → Zod Validation → Typed React Component
 - **React Hooks** — `useGenerativeUI`, `useStreamingUI`, and `useCoAgent` hooks for the full AI-UI lifecycle.
 - **Framework-Agnostic Core** — The validation, streaming, and action engine is pure TypeScript. React hooks are a separate package.
 - **Security Module** — XSS-safe string sanitization, URL scheme validation, CSS injection prevention, built into every schema.
-- **Pre-built Adapters** — Ready-to-use schemas for shadcn/ui, Tailwind CSS, and Material UI (10 components each).
+- **Pre-built Adapters** — Ready-to-use schemas for shadcn/ui, Tailwind CSS, and Material UI (30 components each).
 - **CLI Scaffolding** — `npx @genuikit/cli init` generates a registry file for your chosen adapter. Zero manual setup.
 - **Dev Error Overlay** — Rich floating overlay showing validation errors, raw LLM output, and correction prompts during development. Tree-shakes to zero in production.
 - **Lightweight** — ~37KB core + ~14KB React + ~7KB per adapter. Zero runtime dependencies beyond Zod.
@@ -78,6 +77,7 @@ npx @genuikit/cli init
 ```
 
 The CLI will ask you to:
+
 1. Choose your UI adapter (shadcn/ui, Tailwind CSS, or Material UI)
 2. Pick an output directory (e.g., `src/lib`)
 
@@ -115,13 +115,23 @@ export const weatherCardSchema = z.object({
 });
 
 // Your regular React component — nothing special needed
-export function WeatherCard({ city, temperature, unit, condition, humidity }: z.infer<typeof weatherCardSchema>) {
+export function WeatherCard({
+  city,
+  temperature,
+  unit,
+  condition,
+  humidity,
+}: z.infer<typeof weatherCardSchema>) {
   const icon = { sunny: '☀️', cloudy: '☁️', rainy: '🌧️', snowy: '❄️' }[condition];
 
   return (
     <div className="weather-card">
-      <h3>{icon} {city}</h3>
-      <p className="temp">{temperature}°{unit === 'celsius' ? 'C' : 'F'}</p>
+      <h3>
+        {icon} {city}
+      </h3>
+      <p className="temp">
+        {temperature}°{unit === 'celsius' ? 'C' : 'F'}
+      </p>
       <p>{condition}</p>
       {humidity !== undefined && <p>Humidity: {humidity}%</p>}
     </div>
@@ -183,7 +193,8 @@ The `ComponentRegistry` is the central piece. Think of it as a **lookup table** 
 Component Name → Zod Schema + React Component
 ```
 
-When LLM output arrives, GenUI:
+When LLM output arrives, GenUIKit:
+
 1. Looks up the component by `type`
 2. Validates `props` against the Zod schema
 3. Returns the component + validated props, or an error with a correction prompt
@@ -195,11 +206,15 @@ import { z } from 'zod';
 const registry = new ComponentRegistry();
 
 // Register: name, schema, component
-registry.register('Button', z.object({
-  label: z.string(),
-  variant: z.enum(['primary', 'secondary']).default('primary'),
-  disabled: z.boolean().default(false),
-}), ButtonComponent);
+registry.register(
+  'Button',
+  z.object({
+    label: z.string(),
+    variant: z.enum(['primary', 'secondary']).default('primary'),
+    disabled: z.boolean().default(false),
+  }),
+  ButtonComponent,
+);
 ```
 
 ### Resolving LLM Output
@@ -208,31 +223,31 @@ registry.register('Button', z.object({
 // This is what your LLM returns (e.g., from a tool call)
 const llmOutput = {
   type: 'Button',
-  props: { label: 'Submit Order', variant: 'primary' }
+  props: { label: 'Submit Order', variant: 'primary' },
 };
 
 const result = registry.resolve(llmOutput);
 
 if (result.ok) {
   // ✅ Valid! Use result.component and result.props
-  console.log(result.name);       // 'Button'
-  console.log(result.props);      // { label: 'Submit Order', variant: 'primary', disabled: false }
-  console.log(result.component);  // ButtonComponent
+  console.log(result.name); // 'Button'
+  console.log(result.props); // { label: 'Submit Order', variant: 'primary', disabled: false }
+  console.log(result.component); // ButtonComponent
 } else {
   // ❌ Invalid! Get the correction prompt
-  console.log(result.errors);           // [{ path: ['label'], message: '...' }]
+  console.log(result.errors); // [{ path: ['label'], message: '...' }]
   console.log(result.correctionPrompt); // Structured prompt for the LLM
 }
 ```
 
 ### Auto-Correction Prompts
 
-This is where GenUI shines. When the LLM produces invalid props, instead of crashing, you get a **ready-to-send correction prompt**:
+This is where GenUIKit shines. When the LLM produces invalid props, instead of crashing, you get a **ready-to-send correction prompt**:
 
 ```tsx
 const badOutput = {
   type: 'Button',
-  props: { label: 123, variant: 'invalid' }  // Wrong types!
+  props: { label: 123, variant: 'invalid' }, // Wrong types!
 };
 
 const result = registry.resolve(badOutput);
@@ -243,6 +258,7 @@ if (!result.ok) {
 ```
 
 Output:
+
 ```
 The props you provided for component "Button" failed validation.
 
@@ -263,7 +279,7 @@ Please provide corrected props for "Button" as a valid JSON object matching the 
 Send this back to the LLM and it will self-correct. This creates a **self-healing loop**:
 
 ```
-LLM → Invalid JSON → GenUI validates → Correction prompt → LLM retries → Valid JSON → Render
+LLM → Invalid JSON → GenUIKit validates → Correction prompt → LLM retries → Valid JSON → Render
 ```
 
 ### Tool Definitions for LLMs
@@ -276,6 +292,7 @@ console.log(JSON.stringify(tools, null, 2));
 ```
 
 Output:
+
 ```json
 [
   {
@@ -309,23 +326,23 @@ import { ComponentRegistry } from '@genuikit/core';
 const registry = new ComponentRegistry(options?: RegistryOptions);
 ```
 
-| Option | Type | Default | Description |
-|---|---|---|---|
+| Option           | Type      | Default | Description                                         |
+| ---------------- | --------- | ------- | --------------------------------------------------- |
 | `allowOverwrite` | `boolean` | `false` | Allow re-registering a component with the same name |
 
 **Methods:**
 
-| Method | Returns | Description |
-|---|---|---|
-| `register(name, schema, component)` | `this` | Register a component. Chainable. |
-| `unregister(name)` | `boolean` | Remove a component. Returns `true` if found. |
-| `resolve(output)` | `ResolveResult` | Validate LLM output. Returns success or error. |
-| `tryResolve(output)` | `ResolveResult \| null` | Like `resolve`, but returns `null` for unregistered names. |
-| `has(name)` | `boolean` | Check if a component is registered. |
-| `get(name)` | `RegistryEntry \| undefined` | Get the raw registry entry. |
-| `names()` | `string[]` | List all registered component names. |
-| `size` | `number` | Number of registered components. |
-| `toToolDefinition()` | `ComponentToolDefinition[]` | Generate JSON Schema definitions for LLMs. |
+| Method                              | Returns                      | Description                                                |
+| ----------------------------------- | ---------------------------- | ---------------------------------------------------------- |
+| `register(name, schema, component)` | `this`                       | Register a component. Chainable.                           |
+| `unregister(name)`                  | `boolean`                    | Remove a component. Returns `true` if found.               |
+| `resolve(output)`                   | `ResolveResult`              | Validate LLM output. Returns success or error.             |
+| `tryResolve(output)`                | `ResolveResult \| null`      | Like `resolve`, but returns `null` for unregistered names. |
+| `has(name)`                         | `boolean`                    | Check if a component is registered.                        |
+| `get(name)`                         | `RegistryEntry \| undefined` | Get the raw registry entry.                                |
+| `names()`                           | `string[]`                   | List all registered component names.                       |
+| `size`                              | `number`                     | Number of registered components.                           |
+| `toToolDefinition()`                | `ComponentToolDefinition[]`  | Generate JSON Schema definitions for LLMs.                 |
 
 #### `ResolveResult`
 
@@ -370,13 +387,13 @@ import { useGenerativeUI } from '@genuikit/react';
 const { element, ok, correctionPrompt, errors, result } = useGenerativeUI(registry, output);
 ```
 
-| Return | Type | Description |
-|---|---|---|
-| `element` | `ReactElement \| null` | The rendered component, or null on failure |
-| `ok` | `boolean` | Whether resolution succeeded |
-| `correctionPrompt` | `string \| null` | Correction prompt for the LLM on failure |
-| `errors` | `ValidationError[] \| null` | Detailed field-level errors |
-| `result` | `ResolveResult \| null` | The full resolve result |
+| Return             | Type                        | Description                                |
+| ------------------ | --------------------------- | ------------------------------------------ |
+| `element`          | `ReactElement \| null`      | The rendered component, or null on failure |
+| `ok`               | `boolean`                   | Whether resolution succeeded               |
+| `correctionPrompt` | `string \| null`            | Correction prompt for the LLM on failure   |
+| `errors`           | `ValidationError[] \| null` | Detailed field-level errors                |
+| `result`           | `ResolveResult \| null`     | The full resolve result                    |
 
 #### `<GenerativeUI />`
 
@@ -392,15 +409,15 @@ import { GenerativeUI } from '@genuikit/react';
   onError={(correctionPrompt, errors) => {
     // Send correctionPrompt back to LLM
   }}
-/>
+/>;
 ```
 
-| Prop | Type | Required | Description |
-|---|---|---|---|
-| `registry` | `ComponentRegistry` | Yes | Your component registry |
-| `output` | `LLMComponentOutput` | Yes | The LLM output to render |
-| `fallback` | `ReactNode` | No | What to show on failure |
-| `onError` | `(prompt, errors) => void` | No | Called when validation fails |
+| Prop       | Type                       | Required | Description                  |
+| ---------- | -------------------------- | -------- | ---------------------------- |
+| `registry` | `ComponentRegistry`        | Yes      | Your component registry      |
+| `output`   | `LLMComponentOutput`       | Yes      | The LLM output to render     |
+| `fallback` | `ReactNode`                | No       | What to show on failure      |
+| `onError`  | `(prompt, errors) => void` | No       | Called when validation fails |
 
 #### `<DevGenerativeUI />`
 
@@ -413,11 +430,12 @@ import { DevGenerativeUI } from '@genuikit/react';
   registry={registry}
   output={llmOutput}
   fallback={<div>Failed to render</div>}
-  showOverlay={true}  // default: true in development
-/>
+  showOverlay={true} // default: true in development
+/>;
 ```
 
 The overlay shows:
+
 - Component name and error count
 - Each validation error with field path, expected type, and received value
 - Collapsible raw LLM output (JSON)
@@ -436,7 +454,7 @@ import { ErrorOverlay } from '@genuikit/react';
   output={llmOutput}
   onDismiss={() => setShowOverlay(false)}
   onCopyPrompt={() => toast('Copied!')}
-/>
+/>;
 ```
 
 #### `<CoAgentProvider />`
@@ -447,13 +465,13 @@ Wraps your app to enable bidirectional AI-UI communication:
 import { CoAgentProvider } from '@genuikit/react';
 ```
 
-| Prop | Type | Required | Description |
-|---|---|---|---|
-| `registry` | `ActionRegistry` | Yes | Registry with action schemas |
-| `dispatchOptions` | `DispatchOptions` | No | Debounce, conflict strategy, queue size |
-| `onAction` | `(action) => void` | No | Called on each dispatched action |
-| `onToolCall` | `(result) => void` | No | Called with serialized tool call result |
-| `onValidationError` | `(component, action, errors) => void` | No | Called when validation fails |
+| Prop                | Type                                  | Required | Description                             |
+| ------------------- | ------------------------------------- | -------- | --------------------------------------- |
+| `registry`          | `ActionRegistry`                      | Yes      | Registry with action schemas            |
+| `dispatchOptions`   | `DispatchOptions`                     | No       | Debounce, conflict strategy, queue size |
+| `onAction`          | `(action) => void`                    | No       | Called on each dispatched action        |
+| `onToolCall`        | `(result) => void`                    | No       | Called with serialized tool call result |
+| `onValidationError` | `(component, action, errors) => void` | No       | Called when validation fails            |
 
 #### `useCoAgent`
 
@@ -463,18 +481,18 @@ import { useCoAgent } from '@genuikit/react';
 const { dispatch, history, lastToolCall, context } = useCoAgent('ComponentName');
 ```
 
-| Return | Type | Description |
-|---|---|---|
-| `dispatch` | `(action, payload) => Action \| null` | Dispatch a validated action |
-| `history` | `readonly Action[]` | All dispatched actions in this session |
-| `lastToolCall` | `ToolCallResult \| null` | Most recent tool call result |
-| `context` | `CoAgentContextValue` | Access to registry, queue, serializer |
+| Return         | Type                                  | Description                            |
+| -------------- | ------------------------------------- | -------------------------------------- |
+| `dispatch`     | `(action, payload) => Action \| null` | Dispatch a validated action            |
+| `history`      | `readonly Action[]`                   | All dispatched actions in this session |
+| `lastToolCall` | `ToolCallResult \| null`              | Most recent tool call result           |
+| `context`      | `CoAgentContextValue`                 | Access to registry, queue, serializer  |
 
 ---
 
 ## Streaming
 
-GenUI renders components progressively as LLM tokens arrive — users see UI building up in real time instead of waiting for the full response.
+GenUIKit renders components progressively as LLM tokens arrive — users see UI building up in real time instead of waiting for the full response.
 
 ### StreamParser — Incremental JSON Parsing
 
@@ -484,12 +502,12 @@ import { StreamParser } from '@genuikit/core';
 const parser = new StreamParser();
 
 // Feed tokens as they arrive from the LLM
-parser.push('{"type":"Weather');      // → partial: { type: "Weather" }
+parser.push('{"type":"Weather'); // → partial: { type: "Weather" }
 parser.push('Card","props":{"city"'); // → partial: { type: "WeatherCard", props: { city: ... } }
-parser.push(':"Tokyo"}}');           // → complete: full valid JSON
+parser.push(':"Tokyo"}}'); // → complete: full valid JSON
 
-console.log(parser.current);  // The last valid parsed object
-console.log(parser.complete);  // true when JSON is naturally complete
+console.log(parser.current); // The last valid parsed object
+console.log(parser.complete); // true when JSON is naturally complete
 ```
 
 ### useStreamingUI — Progressive React Rendering
@@ -534,7 +552,10 @@ import { encode, decode, generateWireFormatPrompt } from '@genuikit/core';
 // Wire:     {"t":"c","n":"WeatherCard","p":{"c":"Tokyo","t":22}}              (52 chars → 30% savings)
 
 const abbreviations = { c: 'city', t: 'temperature' };
-const wire = encode({ type: 'WeatherCard', props: { city: 'Tokyo', temperature: 22 } }, abbreviations);
+const wire = encode(
+  { type: 'WeatherCard', props: { city: 'Tokyo', temperature: 22 } },
+  abbreviations,
+);
 const decoded = decode(wire, abbreviations);
 
 // Include in your system prompt so the LLM uses compact format
@@ -548,8 +569,8 @@ import { StreamResolver } from '@genuikit/core';
 
 const resolver = new StreamResolver({
   registry,
-  throttleMs: 50,        // Emit snapshots at 20fps
-  abbreviations,          // Wire format abbreviations
+  throttleMs: 50, // Emit snapshots at 20fps
+  abbreviations, // Wire format abbreviations
   retry: {
     maxRetries: 3,
     baseDelay: 1000,
@@ -572,10 +593,10 @@ await resolver.consume(
 
 ## Bidirectional Sync
 
-GenUI doesn't just render AI output — it lets your UI talk back. When users interact with AI-rendered components, those actions are validated, queued, and serialized into structured tool call results that the AI can understand.
+GenUIKit doesn't just render AI output — it lets your UI talk back. When users interact with AI-rendered components, those actions are validated, queued, and serialized into structured tool call results that the AI can understand.
 
 ```
-AI Agent → GenUI → Rendered Component
+AI Agent → GenUIKit → Rendered Component
                         ↓ (user interacts)
 AI Agent ← Tool Call ← ActionQueue ← Validated Action
 ```
@@ -591,9 +612,10 @@ const registry = new ActionRegistry();
 // Register component with both prop schemas AND action schemas
 registry.registerWithActions(
   'ContactForm',
-  z.object({ title: z.string(), fields: z.array(z.string()) }),  // prop schema
+  z.object({ title: z.string(), fields: z.array(z.string()) }), // prop schema
   {
-    onSubmit: z.object({                                           // action schemas
+    onSubmit: z.object({
+      // action schemas
       name: z.string().min(1),
       email: z.string().email(),
       message: z.string().min(10),
@@ -609,13 +631,13 @@ registry.registerWithActions(
 const result = registry.validateAction('ContactForm', 'onSubmit', {
   name: 'John',
   email: 'john@example.com',
-  message: 'Hello from GenUI!',
+  message: 'Hello from GenUIKit!',
 });
 
 if (result.ok) {
-  console.log(result.action);  // Validated action with ID and timestamp
+  console.log(result.action); // Validated action with ID and timestamp
 } else {
-  console.log(result.errors);  // Field-level validation errors
+  console.log(result.errors); // Field-level validation errors
 }
 ```
 
@@ -641,16 +663,16 @@ const prompt = serializer.toPrompt(action);
 import { ActionQueue } from '@genuikit/core';
 
 const queue = new ActionQueue({
-  debounceMs: 300,              // Wait 300ms before dispatching
-  conflictStrategy: 'latest',   // If same action fires twice, keep the latest
-  maxQueueSize: 50,             // Drop oldest when queue is full
+  debounceMs: 300, // Wait 300ms before dispatching
+  conflictStrategy: 'latest', // If same action fires twice, keep the latest
+  maxQueueSize: 50, // Drop oldest when queue is full
 });
 
 queue.onAction((action) => console.log('Dispatched:', action));
 queue.onToolCall((result) => sendToLLM(result));
 
-queue.push(action);  // Debounced and deduplicated
-queue.flush();        // Force-dispatch all pending actions
+queue.push(action); // Debounced and deduplicated
+queue.flush(); // Force-dispatch all pending actions
 ```
 
 **Conflict strategies:**
@@ -700,7 +722,9 @@ function ContactForm({ title, fields }: Props) {
   return (
     <form onSubmit={handleSubmit}>
       <h2>{title}</h2>
-      {fields.map((f) => <input key={f} name={f} />)}
+      {fields.map((f) => (
+        <input key={f} name={f} />
+      ))}
       <button type="submit">Send</button>
       <p>{history.length} actions sent</p>
     </form>
@@ -714,25 +738,25 @@ function ContactForm({ title, fields }: Props) {
 
 ### Security Module
 
-Every string from an LLM is untrusted. GenUI's security module provides Zod schema builders that sanitize and validate in a single pass:
+Every string from an LLM is untrusted. GenUIKit's security module provides Zod schema builders that sanitize and validate in a single pass:
 
 ```ts
 import { safeString, safeUrl, safeHtml, safeCssClass } from '@genuikit/core';
 import { z } from 'zod';
 
 const schema = z.object({
-  title: safeString({ maxLength: 200 }),      // Strips HTML tags, removes control chars
-  link: safeUrl(),                             // Blocks javascript:, data:, vbscript: schemes
-  content: safeHtml({ allowedTags: ['b', 'i', 'p'] }),  // Keeps only safe tags, strips attributes
-  className: safeCssClass(),                   // Blocks CSS injection (expression(), url())
+  title: safeString({ maxLength: 200 }), // Strips HTML tags, removes control chars
+  link: safeUrl(), // Blocks javascript:, data:, vbscript: schemes
+  content: safeHtml({ allowedTags: ['b', 'i', 'p'] }), // Keeps only safe tags, strips attributes
+  className: safeCssClass(), // Blocks CSS injection (expression(), url())
 });
 
 // XSS is stripped automatically:
 schema.parse({
-  title: '<script>alert(1)</script>Hello',   // → "alert(1)Hello"
-  link: 'https://example.com',              // → "https://example.com/"
+  title: '<script>alert(1)</script>Hello', // → "alert(1)Hello"
+  link: 'https://example.com', // → "https://example.com/"
   content: '<b>bold</b><script>x</script>', // → "<b>bold</b>x"
-  className: 'btn btn-primary',             // → "btn btn-primary"
+  className: 'btn btn-primary', // → "btn btn-primary"
 });
 ```
 
@@ -763,10 +787,70 @@ pnpm add @genuikit/adapters
 
 ```ts
 import { createShadcnRegistry } from '@genuikit/adapters/shadcn';
-import { Button, Card, Alert, Badge, Input, Select, Dialog, Tabs, Table, Avatar } from '@/components/ui';
+import {
+  Button,
+  Card,
+  Alert,
+  Badge,
+  Input,
+  Select,
+  Dialog,
+  Tabs,
+  Table,
+  Avatar,
+  Accordion,
+  Breadcrumbs,
+  Pagination,
+  ProgressBar,
+  Skeleton,
+  Tooltip,
+  Textarea,
+  Checkbox,
+  RadioGroup,
+  Switch,
+  Slider,
+  Form,
+  Stepper,
+  StatCard,
+  Timeline,
+  BarChart,
+  LineChart,
+  PieChart,
+  AreaChart,
+  Map,
+} from '@/components/ui';
 
 const registry = createShadcnRegistry({
-  Button, Card, Alert, Badge, Input, Select, Dialog, Tabs, Table, Avatar,
+  Button,
+  Card,
+  Alert,
+  Badge,
+  Input,
+  Select,
+  Dialog,
+  Tabs,
+  Table,
+  Avatar,
+  Accordion,
+  Breadcrumbs,
+  Pagination,
+  ProgressBar,
+  Skeleton,
+  Tooltip,
+  Textarea,
+  Checkbox,
+  RadioGroup,
+  Switch,
+  Slider,
+  Form,
+  Stepper,
+  StatCard,
+  Timeline,
+  BarChart,
+  LineChart,
+  PieChart,
+  AreaChart,
+  Map,
 });
 
 // Ready to use with useGenerativeUI, useStreamingUI, useCoAgent
@@ -784,20 +868,45 @@ import { createTailwindRegistry } from '@genuikit/adapters/tailwind';
 import { createMuiRegistry } from '@genuikit/adapters/mui';
 ```
 
-Each adapter includes **10 components** with pre-defined schemas and action schemas:
+Each adapter includes **30 components** with pre-defined schemas and action schemas.
 
-| Component | shadcn/ui | Tailwind | MUI |
-|---|---|---|---|
-| Button | variants: default, destructive, outline, secondary, ghost, link | variants: primary, secondary, danger, ghost, link | variants: text, contained, outlined + colors |
-| Card | title, description, content, footer | title, subtitle, body, footer | title, subheader, content, media, actions |
-| Alert | default, destructive | info, success, warning, error + dismissible | severity + variant (standard, filled, outlined) |
-| Badge/Chip | default, secondary, destructive, outline | color-based (gray through pink) | Chip with filled/outlined + colors |
-| Input/TextField | type, placeholder, disabled | + label, helperText, error | + variant, fullWidth, multiline, rows |
-| Select | options, placeholder | + label | + variant, fullWidth |
-| Dialog | title, description, content, open | same | + maxWidth, fullWidth |
-| Tabs | value-based tabs array | same | + variant (standard, scrollable, fullWidth) |
-| Table | headers + rows | + striped, hoverable | + size, stickyHeader |
-| Avatar | src, alt, fallback | + initials, size | + variant (circular, rounded, square) |
+The original 10 core primitives still vary by library:
+
+| Component       | shadcn/ui                                                       | Tailwind                                          | MUI                                             |
+| --------------- | --------------------------------------------------------------- | ------------------------------------------------- | ----------------------------------------------- |
+| Button          | variants: default, destructive, outline, secondary, ghost, link | variants: primary, secondary, danger, ghost, link | variants: text, contained, outlined + colors    |
+| Card            | title, description, content, footer                             | title, subtitle, body, footer                     | title, subheader, content, media, actions       |
+| Alert           | default, destructive                                            | info, success, warning, error + dismissible       | severity + variant (standard, filled, outlined) |
+| Badge/Chip      | default, secondary, destructive, outline                        | color-based (gray through pink)                   | Chip with filled/outlined + colors              |
+| Input/TextField | type, placeholder, disabled                                     | + label, helperText, error                        | + variant, fullWidth, multiline, rows           |
+| Select          | options, placeholder                                            | + label                                           | + variant, fullWidth                            |
+| Dialog          | title, description, content, open                               | same                                              | + maxWidth, fullWidth                           |
+| Tabs            | value-based tabs array                                          | same                                              | + variant (standard, scrollable, fullWidth)     |
+| Table           | headers + rows                                                  | + striped, hoverable                              | + size, stickyHeader                            |
+| Avatar          | src, alt, fallback                                              | + initials, size                                  | + variant (circular, rounded, square)           |
+
+The additional 20 advanced components are shared across all three adapters:
+
+- Accordion
+- Breadcrumbs
+- Pagination
+- ProgressBar
+- Skeleton
+- Tooltip
+- Textarea
+- Checkbox
+- RadioGroup
+- Switch
+- Slider
+- Form
+- Stepper
+- StatCard
+- Timeline
+- BarChart
+- LineChart
+- PieChart
+- AreaChart
+- Map
 
 **Customize individual schemas:**
 
@@ -815,7 +924,7 @@ const customButton = buttonSchema.extend({
 
 ## Full Example: AI Chat with Generative UI
 
-Here's a complete example showing how GenUI fits into an AI chat application:
+Here's a complete example showing how GenUIKit fits into an AI chat application:
 
 ```tsx
 // 1. Define schemas and components
@@ -847,7 +956,11 @@ const statSchema = z.object({
 });
 
 function Button({ label, variant, disabled }: z.infer<typeof buttonSchema>) {
-  return <button className={`btn-${variant}`} disabled={disabled}>{label}</button>;
+  return (
+    <button className={`btn-${variant}`} disabled={disabled}>
+      {label}
+    </button>
+  );
 }
 
 function Card({ title, body, imageUrl }: z.infer<typeof cardSchema>) {
@@ -874,7 +987,10 @@ function Stat({ label, value, unit, trend }: z.infer<typeof statSchema>) {
   return (
     <div className="stat">
       <span>{label}</span>
-      <strong>{value}{unit && ` ${unit}`} {arrow}</strong>
+      <strong>
+        {value}
+        {unit && ` ${unit}`} {arrow}
+      </strong>
     </div>
   );
 }
@@ -885,9 +1001,9 @@ import { ComponentRegistry } from '@genuikit/core';
 const registry = new ComponentRegistry();
 registry
   .register('Button', buttonSchema, Button)
-  .register('Card',   cardSchema,   Card)
-  .register('Alert',  alertSchema,  Alert)
-  .register('Stat',   statSchema,   Stat);
+  .register('Card', cardSchema, Card)
+  .register('Alert', alertSchema, Alert)
+  .register('Stat', statSchema, Stat);
 
 // 3. Use in your chat app
 import { useGenerativeUI } from '@genuikit/react';
@@ -997,9 +1113,9 @@ genui/
 │   ├── adapters/              # @genuikit/adapters — Pre-built UI library schemas
 │   │   └── src/
 │   │       ├── shared/        # Base schemas, registry factory builder
-│   │       ├── shadcn/        # shadcn/ui adapter (10 components)
-│   │       ├── tailwind/      # Tailwind CSS adapter (10 components)
-│   │       └── mui/           # Material UI adapter (10 components)
+│   │       ├── shadcn/        # shadcn/ui adapter (30 components)
+│   │       ├── tailwind/      # Tailwind CSS adapter (30 components)
+│   │       └── mui/           # Material UI adapter (30 components)
 │   └── cli/                   # @genuikit/cli — CLI scaffolding tool
 │       └── src/
 │           ├── index.ts       # CLI entry point (npx @genuikit/cli init)
@@ -1040,16 +1156,16 @@ cd examples/bidirectional-demo && pnpm start     # Bidirectional sync demo
 
 ---
 
-## Why GenUI?
+## Why GenUIKit?
 
-| Feature | GenUI | Manual approach | CopilotKit |
-|---|---|---|---|
-| Type-safe validation | ✅ Zod schemas | ❌ Manual checks | ⚠️ Partial |
-| Auto-correction prompts | ✅ Built-in | ❌ Write yourself | ❌ No |
-| Framework-agnostic core | ✅ Pure TypeScript | N/A | ❌ React-only |
-| Bundle size | ~8KB | 0KB | ~50KB+ |
-| Tool definition generation | ✅ Automatic | ❌ Manual | ⚠️ Partial |
-| Learning curve | 3 functions | N/A | Moderate |
+| Feature                    | GenUIKit              | Manual approach   | CopilotKit    |
+| -------------------------- | ------------------ | ----------------- | ------------- |
+| Type-safe validation       | ✅ Zod schemas     | ❌ Manual checks  | ⚠️ Partial    |
+| Auto-correction prompts    | ✅ Built-in        | ❌ Write yourself | ❌ No         |
+| Framework-agnostic core    | ✅ Pure TypeScript | N/A               | ❌ React-only |
+| Bundle size                | ~58KB total        | 0KB               | ~50KB+        |
+| Tool definition generation | ✅ Automatic       | ❌ Manual         | ⚠️ Partial    |
+| Learning curve             | 3 functions        | N/A               | Moderate      |
 
 ---
 

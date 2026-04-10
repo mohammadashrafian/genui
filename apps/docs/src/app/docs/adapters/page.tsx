@@ -28,14 +28,15 @@ export default function AdaptersPage() {
         <section id="overview" className="mb-12">
           <h2 className="text-2xl font-semibold text-text-primary mb-4">What Are Adapters?</h2>
           <p className="text-text-secondary mb-4">
-            An adapter is a factory function that returns a <InlineCode>ComponentRegistry</InlineCode> pre-loaded
-            with Zod schemas for a specific UI library. The schemas define exactly which props and
-            variants the LLM is allowed to produce — nothing more.
+            An adapter is a factory function that returns a{' '}
+            <InlineCode>ComponentRegistry</InlineCode> pre-loaded with Zod schemas for a specific UI
+            library. The schemas define exactly which props and variants the LLM is allowed to
+            produce — nothing more.
           </p>
           <p className="text-text-secondary mb-4">
-            Adapters do <strong className="text-text-primary">not</strong> ship UI components.
-            You provide your own Button, Card, Alert, and so on. The adapter only supplies the
-            validated schema layer that sits between the LLM output and your component tree.
+            Adapters do <strong className="text-text-primary">not</strong> ship UI components. You
+            provide your own Button, Card, Alert, and so on. The adapter only supplies the validated
+            schema layer that sits between the LLM output and your component tree.
           </p>
           <p className="text-text-secondary mb-4">
             This separation means you keep full control over styling and behavior while GenUIKit
@@ -43,17 +44,17 @@ export default function AdaptersPage() {
           </p>
           <div className="rounded-lg border border-border bg-surface-card p-4 mb-4">
             <p className="text-sm text-text-secondary">
-              <strong className="text-primary">Why adapters matter for security:</strong> Every
-              prop value passes through a strict Zod schema before reaching your component.
-              Free-form strings are sanitized, enum values are constrained, and unknown fields are
-              stripped. This prevents the LLM from injecting arbitrary HTML, event handlers, or
-              unexpected prop combinations.
+              <strong className="text-primary">Why adapters matter for security:</strong> Every prop
+              value passes through a strict Zod schema before reaching your component. Free-form
+              strings are sanitized, enum values are constrained, and unknown fields are stripped.
+              This prevents the LLM from injecting arbitrary HTML, event handlers, or unexpected
+              prop combinations.
             </p>
           </div>
           <p className="text-text-secondary">
-            GenUIKit ships three official adapters — shadcn/ui, Tailwind CSS, and Material UI —
-            each covering the same 10 core component types with library-appropriate naming and
-            variant options.
+            GenUIKit ships three official adapters — shadcn/ui, Tailwind CSS, and Material UI — each
+            covering 30 component types. The first 10 keep library-specific naming and variant
+            options, while 20 advanced schemas are shared across every adapter.
           </p>
         </section>
 
@@ -95,52 +96,94 @@ const registry = createShadcnRegistry({
 
 export default registry;`}
           />
+          <p className="text-sm text-text-secondary mt-3">
+            This shortened example shows the library-specific base set. Your actual registry should
+            also provide the shared advanced components such as <InlineCode>Accordion</InlineCode>,
+            <InlineCode>Form</InlineCode>, <InlineCode>BarChart</InlineCode>, and{' '}
+            <InlineCode>Map</InlineCode>.
+          </p>
 
           <h3 className="text-lg font-medium text-text-primary mb-2 mt-8">Included Components</h3>
           <p className="text-text-secondary mb-3">
-            The shadcn/ui adapter registers schemas for 10 components. Each schema constrains the
-            variants to match shadcn/ui conventions:
+            The shadcn/ui adapter registers schemas for 30 components. The first 10 constrain the
+            base primitives to match shadcn/ui conventions, and the remaining 20 cover advanced
+            layout, form, visualization, and map patterns:
           </p>
           <ul className="space-y-2 text-text-secondary mb-4">
             <li className="flex items-start gap-2">
               <span className="text-accent mt-0.5">--</span>
-              <span><strong className="text-text-primary">Button</strong> — variant: <InlineCode>default</InlineCode>, <InlineCode>destructive</InlineCode>, <InlineCode>outline</InlineCode>, <InlineCode>secondary</InlineCode>, <InlineCode>ghost</InlineCode>, <InlineCode>link</InlineCode>; size: <InlineCode>default</InlineCode>, <InlineCode>sm</InlineCode>, <InlineCode>lg</InlineCode>, <InlineCode>icon</InlineCode></span>
+              <span>
+                <strong className="text-text-primary">Button</strong> — variant:{' '}
+                <InlineCode>default</InlineCode>, <InlineCode>destructive</InlineCode>,{' '}
+                <InlineCode>outline</InlineCode>, <InlineCode>secondary</InlineCode>,{' '}
+                <InlineCode>ghost</InlineCode>, <InlineCode>link</InlineCode>; size:{' '}
+                <InlineCode>default</InlineCode>, <InlineCode>sm</InlineCode>,{' '}
+                <InlineCode>lg</InlineCode>, <InlineCode>icon</InlineCode>
+              </span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-accent mt-0.5">--</span>
-              <span><strong className="text-text-primary">Card</strong> — title, description, content, and footer sections</span>
+              <span>
+                <strong className="text-text-primary">Card</strong> — title, description, content,
+                and footer sections
+              </span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-accent mt-0.5">--</span>
-              <span><strong className="text-text-primary">Alert</strong> — variant: <InlineCode>default</InlineCode>, <InlineCode>destructive</InlineCode>; title and description</span>
+              <span>
+                <strong className="text-text-primary">Alert</strong> — variant:{' '}
+                <InlineCode>default</InlineCode>, <InlineCode>destructive</InlineCode>; title and
+                description
+              </span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-accent mt-0.5">--</span>
-              <span><strong className="text-text-primary">Badge</strong> — variant: <InlineCode>default</InlineCode>, <InlineCode>secondary</InlineCode>, <InlineCode>destructive</InlineCode>, <InlineCode>outline</InlineCode></span>
+              <span>
+                <strong className="text-text-primary">Badge</strong> — variant:{' '}
+                <InlineCode>default</InlineCode>, <InlineCode>secondary</InlineCode>,{' '}
+                <InlineCode>destructive</InlineCode>, <InlineCode>outline</InlineCode>
+              </span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-accent mt-0.5">--</span>
-              <span><strong className="text-text-primary">Input</strong> — type, placeholder, disabled, required</span>
+              <span>
+                <strong className="text-text-primary">Input</strong> — type, placeholder, disabled,
+                required
+              </span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-accent mt-0.5">--</span>
-              <span><strong className="text-text-primary">Select</strong> — options array, placeholder, disabled</span>
+              <span>
+                <strong className="text-text-primary">Select</strong> — options array, placeholder,
+                disabled
+              </span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-accent mt-0.5">--</span>
-              <span><strong className="text-text-primary">Dialog</strong> — title, description, open state, content</span>
+              <span>
+                <strong className="text-text-primary">Dialog</strong> — title, description, open
+                state, content
+              </span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-accent mt-0.5">--</span>
-              <span><strong className="text-text-primary">Tabs</strong> — tabs array with label and content per tab</span>
+              <span>
+                <strong className="text-text-primary">Tabs</strong> — tabs array with label and
+                content per tab
+              </span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-accent mt-0.5">--</span>
-              <span><strong className="text-text-primary">Table</strong> — headers array, rows as 2D array, caption</span>
+              <span>
+                <strong className="text-text-primary">Table</strong> — headers array, rows as 2D
+                array, caption
+              </span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-accent mt-0.5">--</span>
-              <span><strong className="text-text-primary">Avatar</strong> — src, alt, fallback text</span>
+              <span>
+                <strong className="text-text-primary">Avatar</strong> — src, alt, fallback text
+              </span>
             </li>
           </ul>
         </section>
@@ -149,10 +192,10 @@ export default registry;`}
         <section id="tailwind" className="mb-12">
           <h2 className="text-2xl font-semibold text-text-primary mb-4">Tailwind CSS Adapter</h2>
           <p className="text-text-secondary mb-4">
-            The Tailwind adapter is library-agnostic — it uses generic variant names like
-            {' '}<InlineCode>primary</InlineCode>, <InlineCode>secondary</InlineCode>, and
-            {' '}<InlineCode>danger</InlineCode> that map naturally to utility-class-based
-            components. It registers the same 10 component types.
+            The Tailwind adapter is library-agnostic — it uses generic variant names like{' '}
+            <InlineCode>primary</InlineCode>, <InlineCode>secondary</InlineCode>, and{' '}
+            <InlineCode>danger</InlineCode> that map naturally to utility-class-based components. It
+            registers the same 30 component types.
           </p>
 
           <h3 className="text-lg font-medium text-text-primary mb-2 mt-8">Setup</h3>
@@ -180,6 +223,19 @@ const registry = createTailwindRegistry({
 
 export default registry;`}
           />
+          <p className="text-sm text-text-secondary mt-3">
+            The shared advanced set is identical here too: <InlineCode>Accordion</InlineCode>,{' '}
+            <InlineCode>Breadcrumbs</InlineCode>, <InlineCode>Pagination</InlineCode>,{' '}
+            <InlineCode>ProgressBar</InlineCode>, <InlineCode>Skeleton</InlineCode>,{' '}
+            <InlineCode>Tooltip</InlineCode>, <InlineCode>Textarea</InlineCode>,{' '}
+            <InlineCode>Checkbox</InlineCode>, <InlineCode>RadioGroup</InlineCode>,{' '}
+            <InlineCode>Switch</InlineCode>, <InlineCode>Slider</InlineCode>,{' '}
+            <InlineCode>Form</InlineCode>, <InlineCode>Stepper</InlineCode>,{' '}
+            <InlineCode>StatCard</InlineCode>, <InlineCode>Timeline</InlineCode>,{' '}
+            <InlineCode>BarChart</InlineCode>, <InlineCode>LineChart</InlineCode>,{' '}
+            <InlineCode>PieChart</InlineCode>, <InlineCode>AreaChart</InlineCode>,{' '}
+            and <InlineCode>Map</InlineCode>.
+          </p>
 
           <h3 className="text-lg font-medium text-text-primary mb-2 mt-8">Variant Differences</h3>
           <p className="text-text-secondary mb-3">
@@ -188,15 +244,29 @@ export default registry;`}
           <ul className="space-y-2 text-text-secondary">
             <li className="flex items-start gap-2">
               <span className="text-accent mt-0.5">--</span>
-              <span><strong className="text-text-primary">Button</strong> — variant: <InlineCode>primary</InlineCode>, <InlineCode>secondary</InlineCode>, <InlineCode>danger</InlineCode>, <InlineCode>outline</InlineCode>, <InlineCode>ghost</InlineCode>; size: <InlineCode>sm</InlineCode>, <InlineCode>md</InlineCode>, <InlineCode>lg</InlineCode></span>
+              <span>
+                <strong className="text-text-primary">Button</strong> — variant:{' '}
+                <InlineCode>primary</InlineCode>, <InlineCode>secondary</InlineCode>,{' '}
+                <InlineCode>danger</InlineCode>, <InlineCode>outline</InlineCode>,{' '}
+                <InlineCode>ghost</InlineCode>; size: <InlineCode>sm</InlineCode>,{' '}
+                <InlineCode>md</InlineCode>, <InlineCode>lg</InlineCode>
+              </span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-accent mt-0.5">--</span>
-              <span><strong className="text-text-primary">Alert</strong> — variant: <InlineCode>info</InlineCode>, <InlineCode>success</InlineCode>, <InlineCode>warning</InlineCode>, <InlineCode>danger</InlineCode></span>
+              <span>
+                <strong className="text-text-primary">Alert</strong> — variant:{' '}
+                <InlineCode>info</InlineCode>, <InlineCode>success</InlineCode>,{' '}
+                <InlineCode>warning</InlineCode>, <InlineCode>danger</InlineCode>
+              </span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-accent mt-0.5">--</span>
-              <span><strong className="text-text-primary">Badge</strong> — variant: <InlineCode>primary</InlineCode>, <InlineCode>secondary</InlineCode>, <InlineCode>danger</InlineCode>, <InlineCode>outline</InlineCode></span>
+              <span>
+                <strong className="text-text-primary">Badge</strong> — variant:{' '}
+                <InlineCode>primary</InlineCode>, <InlineCode>secondary</InlineCode>,{' '}
+                <InlineCode>danger</InlineCode>, <InlineCode>outline</InlineCode>
+              </span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-accent mt-0.5">--</span>
@@ -209,8 +279,8 @@ export default registry;`}
         <section id="mui" className="mb-12">
           <h2 className="text-2xl font-semibold text-text-primary mb-4">Material UI Adapter</h2>
           <p className="text-text-secondary mb-4">
-            The MUI adapter follows Material UI naming conventions. Some component names differ
-            from the other adapters to match what MUI developers expect.
+            The MUI adapter follows Material UI naming conventions. Some component names differ from
+            the other adapters to match what MUI developers expect.
           </p>
 
           <h3 className="text-lg font-medium text-text-primary mb-2 mt-8">Setup</h3>
@@ -238,27 +308,54 @@ const registry = createMuiRegistry({
 
 export default registry;`}
           />
+          <p className="text-sm text-text-secondary mt-3">
+            The MUI adapter uses native Material components where they exist, and custom wrappers
+            for the shared advanced schemas such as charts, timelines, stat cards, and maps.
+          </p>
 
           <h3 className="text-lg font-medium text-text-primary mb-2 mt-8">MUI-specific Naming</h3>
-          <p className="text-text-secondary mb-3">
-            Key differences from the other adapters:
-          </p>
+          <p className="text-text-secondary mb-3">Key differences from the other adapters:</p>
           <ul className="space-y-2 text-text-secondary">
             <li className="flex items-start gap-2">
               <span className="text-accent mt-0.5">--</span>
-              <span><strong className="text-text-primary">Button</strong> — variant: <InlineCode>text</InlineCode>, <InlineCode>contained</InlineCode>, <InlineCode>outlined</InlineCode>; color: <InlineCode>primary</InlineCode>, <InlineCode>secondary</InlineCode>, <InlineCode>error</InlineCode>, <InlineCode>warning</InlineCode>, <InlineCode>info</InlineCode>, <InlineCode>success</InlineCode>; size: <InlineCode>small</InlineCode>, <InlineCode>medium</InlineCode>, <InlineCode>large</InlineCode></span>
+              <span>
+                <strong className="text-text-primary">Button</strong> — variant:{' '}
+                <InlineCode>text</InlineCode>, <InlineCode>contained</InlineCode>,{' '}
+                <InlineCode>outlined</InlineCode>; color: <InlineCode>primary</InlineCode>,{' '}
+                <InlineCode>secondary</InlineCode>, <InlineCode>error</InlineCode>,{' '}
+                <InlineCode>warning</InlineCode>, <InlineCode>info</InlineCode>,{' '}
+                <InlineCode>success</InlineCode>; size: <InlineCode>small</InlineCode>,{' '}
+                <InlineCode>medium</InlineCode>, <InlineCode>large</InlineCode>
+              </span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-accent mt-0.5">--</span>
-              <span><strong className="text-text-primary">Chip</strong> (instead of Badge) — variant: <InlineCode>filled</InlineCode>, <InlineCode>outlined</InlineCode>; color: <InlineCode>default</InlineCode>, <InlineCode>primary</InlineCode>, <InlineCode>secondary</InlineCode>, <InlineCode>error</InlineCode>, <InlineCode>warning</InlineCode>, <InlineCode>info</InlineCode>, <InlineCode>success</InlineCode></span>
+              <span>
+                <strong className="text-text-primary">Chip</strong> (instead of Badge) — variant:{' '}
+                <InlineCode>filled</InlineCode>, <InlineCode>outlined</InlineCode>; color:{' '}
+                <InlineCode>default</InlineCode>, <InlineCode>primary</InlineCode>,{' '}
+                <InlineCode>secondary</InlineCode>, <InlineCode>error</InlineCode>,{' '}
+                <InlineCode>warning</InlineCode>, <InlineCode>info</InlineCode>,{' '}
+                <InlineCode>success</InlineCode>
+              </span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-accent mt-0.5">--</span>
-              <span><strong className="text-text-primary">TextField</strong> (instead of Input) — variant: <InlineCode>filled</InlineCode>, <InlineCode>outlined</InlineCode>, <InlineCode>standard</InlineCode>; includes label and helperText props</span>
+              <span>
+                <strong className="text-text-primary">TextField</strong> (instead of Input) —
+                variant: <InlineCode>filled</InlineCode>, <InlineCode>outlined</InlineCode>,{' '}
+                <InlineCode>standard</InlineCode>; includes label and helperText props
+              </span>
             </li>
             <li className="flex items-start gap-2">
               <span className="text-accent mt-0.5">--</span>
-              <span><strong className="text-text-primary">Alert</strong> — severity: <InlineCode>error</InlineCode>, <InlineCode>warning</InlineCode>, <InlineCode>info</InlineCode>, <InlineCode>success</InlineCode>; variant: <InlineCode>filled</InlineCode>, <InlineCode>outlined</InlineCode>, <InlineCode>standard</InlineCode></span>
+              <span>
+                <strong className="text-text-primary">Alert</strong> — severity:{' '}
+                <InlineCode>error</InlineCode>, <InlineCode>warning</InlineCode>,{' '}
+                <InlineCode>info</InlineCode>, <InlineCode>success</InlineCode>; variant:{' '}
+                <InlineCode>filled</InlineCode>, <InlineCode>outlined</InlineCode>,{' '}
+                <InlineCode>standard</InlineCode>
+              </span>
             </li>
           </ul>
         </section>
@@ -267,8 +364,8 @@ export default registry;`}
         <section id="comparison" className="mb-12">
           <h2 className="text-2xl font-semibold text-text-primary mb-4">Component Comparison</h2>
           <p className="text-text-secondary mb-4">
-            All three adapters cover the same 10 component types. This table shows how naming and
-            variants differ across each adapter:
+            All three adapters share 20 advanced schemas on top of the original 10 primitives. This
+            table focuses on how naming and variants differ across the core primitives:
           </p>
           <div className="overflow-x-auto rounded-lg border border-border">
             <table className="w-full text-sm">
@@ -277,13 +374,17 @@ export default registry;`}
                   <th className="text-left px-4 py-3 text-text-primary font-semibold">Component</th>
                   <th className="text-left px-4 py-3 text-text-primary font-semibold">shadcn/ui</th>
                   <th className="text-left px-4 py-3 text-text-primary font-semibold">Tailwind</th>
-                  <th className="text-left px-4 py-3 text-text-primary font-semibold">Material UI</th>
+                  <th className="text-left px-4 py-3 text-text-primary font-semibold">
+                    Material UI
+                  </th>
                 </tr>
               </thead>
               <tbody className="text-text-secondary">
                 <tr className="border-b border-border">
                   <td className="px-4 py-3 font-medium text-text-primary">Button</td>
-                  <td className="px-4 py-3">default, destructive, outline, secondary, ghost, link</td>
+                  <td className="px-4 py-3">
+                    default, destructive, outline, secondary, ghost, link
+                  </td>
                   <td className="px-4 py-3">primary, secondary, danger, outline, ghost</td>
                   <td className="px-4 py-3">text, contained, outlined</td>
                 </tr>
@@ -344,14 +445,30 @@ export default registry;`}
               </tbody>
             </table>
           </div>
+          <div className="mt-4 rounded-lg border border-border bg-surface-card p-4">
+            <p className="text-sm text-text-secondary">
+              Shared advanced components across all adapters: <InlineCode>Accordion</InlineCode>,{' '}
+              <InlineCode>Breadcrumbs</InlineCode>, <InlineCode>Pagination</InlineCode>,{' '}
+              <InlineCode>ProgressBar</InlineCode>, <InlineCode>Skeleton</InlineCode>,{' '}
+              <InlineCode>Tooltip</InlineCode>, <InlineCode>Textarea</InlineCode>,{' '}
+              <InlineCode>Checkbox</InlineCode>, <InlineCode>RadioGroup</InlineCode>,{' '}
+              <InlineCode>Switch</InlineCode>, <InlineCode>Slider</InlineCode>,{' '}
+              <InlineCode>Form</InlineCode>, <InlineCode>Stepper</InlineCode>,{' '}
+              <InlineCode>StatCard</InlineCode>, <InlineCode>Timeline</InlineCode>,{' '}
+              <InlineCode>BarChart</InlineCode>, <InlineCode>LineChart</InlineCode>,{' '}
+              <InlineCode>PieChart</InlineCode>, <InlineCode>AreaChart</InlineCode>, and{' '}
+              <InlineCode>Map</InlineCode>.
+            </p>
+          </div>
         </section>
 
         {/* Customizing Schemas */}
         <section id="customizing" className="mb-12">
           <h2 className="text-2xl font-semibold text-text-primary mb-4">Customizing Schemas</h2>
           <p className="text-text-secondary mb-4">
-            Adapter schemas are standard Zod objects. You can extend them with <InlineCode>.extend()</InlineCode> to
-            add custom fields, override defaults, or tighten constraints before registering.
+            Adapter schemas are standard Zod objects. You can extend them with{' '}
+            <InlineCode>.extend()</InlineCode> to add custom fields, override defaults, or tighten
+            constraints before registering.
           </p>
 
           <h3 className="text-lg font-medium text-text-primary mb-2 mt-8">Extending a schema</h3>
@@ -361,7 +478,8 @@ export default registry;`}
           <CodeBlock
             language="typescript"
             filename="registry.ts"
-            code={`import { buttonSchema } from '@genuikit/adapters/shadcn';
+            code={`import { z } from 'zod';
+import { buttonSchema } from '@genuikit/adapters/shadcn';
 import { ComponentRegistry } from '@genuikit/core';
 import { Button } from '@/components/ui/button';
 
@@ -383,7 +501,8 @@ registry.register('Button', extendedButtonSchema, Button);`}
           <CodeBlock
             language="typescript"
             filename="registry.ts"
-            code={`import { buttonSchema } from '@genuikit/adapters/shadcn';
+            code={`import { z } from 'zod';
+import { buttonSchema } from '@genuikit/adapters/shadcn';
 
 // Only allow 'default' and 'outline' variants in your app
 const restrictedButton = buttonSchema.extend({
@@ -420,11 +539,14 @@ registry.register('Button', buttonSchema, Button, {
 
         {/* Creating Custom Adapters */}
         <section id="custom-adapters" className="mb-12">
-          <h2 className="text-2xl font-semibold text-text-primary mb-4">Creating Custom Adapters</h2>
+          <h2 className="text-2xl font-semibold text-text-primary mb-4">
+            Creating Custom Adapters
+          </h2>
           <p className="text-text-secondary mb-4">
-            If none of the built-in adapters fit your design system, you can create your own using
-            {' '}<InlineCode>createRegistryFactory</InlineCode> from <InlineCode>@genuikit/core</InlineCode>.
-            This gives you the same factory pattern the official adapters use.
+            If none of the built-in adapters fit your design system, you can create your own using{' '}
+            <InlineCode>createRegistryFactory</InlineCode> from{' '}
+            <InlineCode>@genuikit/adapters</InlineCode>. This gives you the same factory pattern the
+            official adapters use.
           </p>
 
           <h3 className="text-lg font-medium text-text-primary mb-2 mt-8">Factory function</h3>
@@ -435,7 +557,7 @@ registry.register('Button', buttonSchema, Button, {
             language="typescript"
             filename="my-adapter.ts"
             code={`import { z } from 'zod';
-import { createRegistryFactory } from '@genuikit/core';
+import { createRegistryFactory } from '@genuikit/adapters';
 
 // Define schemas for your design system
 const schemas = {
@@ -461,7 +583,9 @@ const schemas = {
 export const createMyRegistry = createRegistryFactory(schemas);`}
           />
 
-          <h3 className="text-lg font-medium text-text-primary mb-2 mt-8">Using the custom adapter</h3>
+          <h3 className="text-lg font-medium text-text-primary mb-2 mt-8">
+            Using the custom adapter
+          </h3>
           <p className="text-text-secondary mb-3">
             Consumers of your adapter use it exactly like the built-in adapters:
           </p>
@@ -480,7 +604,9 @@ const registry = createMyRegistry({
 export default registry;`}
           />
 
-          <h3 className="text-lg font-medium text-text-primary mb-2 mt-8">Including action schemas</h3>
+          <h3 className="text-lg font-medium text-text-primary mb-2 mt-8">
+            Including action schemas
+          </h3>
           <p className="text-text-secondary mb-3">
             Pass a second argument to <InlineCode>createRegistryFactory</InlineCode> to define
             action schemas alongside your component schemas:
@@ -489,7 +615,7 @@ export default registry;`}
             language="typescript"
             filename="my-adapter.ts"
             code={`import { z } from 'zod';
-import { createRegistryFactory } from '@genuikit/core';
+import { createRegistryFactory } from '@genuikit/adapters';
 
 const schemas = {
   Button: z.object({
@@ -520,28 +646,36 @@ export const createMyRegistry = createRegistryFactory(schemas, actionSchemas);`}
               className="rounded-lg border border-border bg-surface-card p-4 hover:border-primary/50 transition-colors"
             >
               <h3 className="text-sm font-medium text-primary">Core Concepts</h3>
-              <p className="mt-1 text-sm text-text-secondary">Understand registries, validation, and correction prompts.</p>
+              <p className="mt-1 text-sm text-text-secondary">
+                Understand registries, validation, and correction prompts.
+              </p>
             </Link>
             <Link
               href="/docs/security"
               className="rounded-lg border border-border bg-surface-card p-4 hover:border-primary/50 transition-colors"
             >
               <h3 className="text-sm font-medium text-primary">Security</h3>
-              <p className="mt-1 text-sm text-text-secondary">Learn about XSS protection and safe schemas.</p>
+              <p className="mt-1 text-sm text-text-secondary">
+                Learn about XSS protection and safe schemas.
+              </p>
             </Link>
             <Link
               href="/docs/react-hooks"
               className="rounded-lg border border-border bg-surface-card p-4 hover:border-primary/50 transition-colors"
             >
               <h3 className="text-sm font-medium text-primary">React Hooks</h3>
-              <p className="mt-1 text-sm text-text-secondary">API reference for useGenerativeUI and useStreamingUI.</p>
+              <p className="mt-1 text-sm text-text-secondary">
+                API reference for useGenerativeUI and useStreamingUI.
+              </p>
             </Link>
             <Link
               href="/docs/streaming"
               className="rounded-lg border border-border bg-surface-card p-4 hover:border-primary/50 transition-colors"
             >
               <h3 className="text-sm font-medium text-primary">Streaming</h3>
-              <p className="mt-1 text-sm text-text-secondary">Progressive rendering with incremental JSON parsing.</p>
+              <p className="mt-1 text-sm text-text-secondary">
+                Progressive rendering with incremental JSON parsing.
+              </p>
             </Link>
           </div>
         </section>

@@ -36,6 +36,18 @@ export const changeActionSchema = z.object({
   componentId: safeString({ maxLength: 128 }).optional(),
 });
 
+/** Generic numeric change action payload. */
+export const numberChangeActionSchema = z.object({
+  value: z.number().finite(),
+  componentId: safeString({ maxLength: 128 }).optional(),
+});
+
+/** Generic boolean toggle payload. */
+export const booleanChangeActionSchema = z.object({
+  checked: z.boolean(),
+  componentId: safeString({ maxLength: 128 }).optional(),
+});
+
 /** Form submit action payload. */
 export const submitActionSchema = z.object({
   values: z.record(safeString({ maxLength: 256 }), safeString({ maxLength: 10_000 })),
@@ -45,5 +57,23 @@ export const submitActionSchema = z.object({
 /** Dialog/modal open state change. */
 export const openChangeActionSchema = z.object({
   open: z.boolean(),
+  componentId: safeString({ maxLength: 128 }).optional(),
+});
+
+/** Pagination/page navigation payload. */
+export const pageChangeActionSchema = z.object({
+  page: z.number().int().min(1),
+  componentId: safeString({ maxLength: 128 }).optional(),
+});
+
+/** Stepper/current-step change payload. */
+export const stepChangeActionSchema = z.object({
+  step: z.number().int().min(0),
+  componentId: safeString({ maxLength: 128 }).optional(),
+});
+
+/** Marker selection payload for map-like components. */
+export const markerSelectActionSchema = z.object({
+  markerId: safeString({ maxLength: 128 }),
   componentId: safeString({ maxLength: 128 }).optional(),
 });

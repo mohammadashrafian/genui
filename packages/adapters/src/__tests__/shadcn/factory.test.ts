@@ -15,12 +15,32 @@ const allComponents = {
   Tabs: Dummy,
   Table: Dummy,
   Avatar: Dummy,
+  Accordion: Dummy,
+  Breadcrumbs: Dummy,
+  Pagination: Dummy,
+  ProgressBar: Dummy,
+  Skeleton: Dummy,
+  Tooltip: Dummy,
+  Textarea: Dummy,
+  Checkbox: Dummy,
+  RadioGroup: Dummy,
+  Switch: Dummy,
+  Slider: Dummy,
+  Form: Dummy,
+  Stepper: Dummy,
+  StatCard: Dummy,
+  Timeline: Dummy,
+  BarChart: Dummy,
+  LineChart: Dummy,
+  PieChart: Dummy,
+  AreaChart: Dummy,
+  Map: Dummy,
 };
 
 describe('createShadcnRegistry', () => {
-  it('creates registry with all 10 components', () => {
+  it('creates registry with all 30 components', () => {
     const registry = createShadcnRegistry(allComponents);
-    expect(registry.size).toBe(10);
+    expect(registry.size).toBe(30);
   });
 
   it('registers action schemas for interactive components', () => {
@@ -31,6 +51,9 @@ describe('createShadcnRegistry', () => {
     expect(registry.hasAction('Select', 'onChange')).toBe(true);
     expect(registry.hasAction('Dialog', 'onOpenChange')).toBe(true);
     expect(registry.hasAction('Tabs', 'onValueChange')).toBe(true);
+    expect(registry.hasAction('Accordion', 'onValueChange')).toBe(true);
+    expect(registry.hasAction('Form', 'onSubmit')).toBe(true);
+    expect(registry.hasAction('Map', 'onMarkerSelect')).toBe(true);
   });
 
   it('does not register actions for non-interactive components', () => {
@@ -56,8 +79,7 @@ describe('createShadcnRegistry', () => {
   });
 
   it('throws when components are missing', () => {
-    expect(() => createShadcnRegistry({ Button: Dummy } as any))
-      .toThrow(MissingComponentError);
+    expect(() => createShadcnRegistry({ Button: Dummy } as any)).toThrow(MissingComponentError);
   });
 
   it('strips XSS from resolved props', () => {
@@ -79,5 +101,17 @@ describe('createShadcnRegistry', () => {
       props: { src: 'javascript:alert(1)', alt: 'User' },
     });
     expect(result.ok).toBe(false);
+  });
+
+  it('resolves shared advanced components', () => {
+    const registry = createShadcnRegistry(allComponents);
+    const result = registry.resolve({
+      type: 'BarChart',
+      props: {
+        categories: ['Jan', 'Feb'],
+        series: [{ id: 'revenue', label: 'Revenue', values: [10, 20] }],
+      },
+    });
+    expect(result.ok).toBe(true);
   });
 });

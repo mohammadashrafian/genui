@@ -14,12 +14,32 @@ const allComponents = {
   Tabs: Dummy,
   Table: Dummy,
   Avatar: Dummy,
+  Accordion: Dummy,
+  Breadcrumbs: Dummy,
+  Pagination: Dummy,
+  ProgressBar: Dummy,
+  Skeleton: Dummy,
+  Tooltip: Dummy,
+  Textarea: Dummy,
+  Checkbox: Dummy,
+  RadioGroup: Dummy,
+  Switch: Dummy,
+  Slider: Dummy,
+  Form: Dummy,
+  Stepper: Dummy,
+  StatCard: Dummy,
+  Timeline: Dummy,
+  BarChart: Dummy,
+  LineChart: Dummy,
+  PieChart: Dummy,
+  AreaChart: Dummy,
+  Map: Dummy,
 };
 
 describe('createMuiRegistry', () => {
-  it('creates registry with all 10 components', () => {
+  it('creates registry with all 30 components', () => {
     const registry = createMuiRegistry(allComponents);
-    expect(registry.size).toBe(10);
+    expect(registry.size).toBe(30);
   });
 
   it('registers MUI-specific action schemas', () => {
@@ -30,6 +50,9 @@ describe('createMuiRegistry', () => {
     expect(registry.hasAction('Dialog', 'onClose')).toBe(true);
     expect(registry.hasAction('Chip', 'onClick')).toBe(true);
     expect(registry.hasAction('Chip', 'onDelete')).toBe(true);
+    expect(registry.hasAction('Stepper', 'onStepChange')).toBe(true);
+    expect(registry.hasAction('Checkbox', 'onCheckedChange')).toBe(true);
+    expect(registry.hasAction('Map', 'onMarkerSelect')).toBe(true);
   });
 
   it('resolves button with MUI variants', () => {
@@ -91,5 +114,24 @@ describe('createMuiRegistry', () => {
       },
     });
     expect(result.ok).toBe(false);
+  });
+
+  it('resolves shared form schema', () => {
+    const registry = createMuiRegistry(allComponents);
+    const result = registry.resolve({
+      type: 'Form',
+      props: {
+        fields: [
+          { name: 'email', label: 'Email', type: 'email', required: true },
+          {
+            name: 'plan',
+            label: 'Plan',
+            type: 'select',
+            options: [{ value: 'pro', label: 'Pro' }],
+          },
+        ],
+      },
+    });
+    expect(result.ok).toBe(true);
   });
 });
